@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../assets/css/style.css";
 import { toast } from "react-hot-toast";
+import axiosInstance from "../../axios";
 
 const SignupForm = () => {
   const [isLoading, setLoading] = useState(false);
@@ -71,7 +72,7 @@ const SignupForm = () => {
       setLoading(false);
     } else {
       delete formValue.password_confirm;
-      clearState();
+      submitSignUp();
       setLoading(false);
     }
   };
@@ -81,6 +82,27 @@ const SignupForm = () => {
       ...formValue,
       [event.target.name]: event.target.value,
     });
+  };
+
+  const submitSignUp = () => {
+    setLoading(true);
+    axiosInstance
+      .post("/user/signup", formValue)
+      .then((res) => {
+        if (res.data.status === true) {
+          toast.success("Successfully signed up!");
+          clearState();
+          setLoading(false);
+        } else {
+          toast.error(res.data.message);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.response.data.message);
+        setLoading(false);
+      });
   };
 
   if (isLoading) {
@@ -115,7 +137,7 @@ const SignupForm = () => {
         <div class="container">
           <div class="row">
             <div class="col-lg-12 d-flex flex-column justify-content-center">
-              <div id="signInForm" className="signupform">
+              <div id="signInForm1" className="signupform1">
                 <h1 data-aos="fade-up">We are delighted to have you here!</h1>
                 <main className="form-signup w-100 m-auto">
                   <div className="row g-3">

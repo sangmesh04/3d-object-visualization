@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import "../../assets/css/style.css";
 import loginbg from "../../assets/img/login-bg.jpg";
+import axiosInstance from "../../axios";
 
 const LoginForm = () => {
   const [isLoading, setLoading] = useState(false);
@@ -27,6 +28,25 @@ const LoginForm = () => {
     //   setLoading(false);
     // }
     else {
+      setLoading(true);
+      axiosInstance
+        .post("/user/login", formValue)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.success === true) {
+            toast.success("Login Successful!");
+            setLoading(false);
+            console.log(res.data);
+            setformValue({ username: "", password: "" });
+          } else {
+            toast.error("Login Failed!");
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          toast.error(err.response.data.message);
+          setLoading(false);
+        });
     }
   };
 
