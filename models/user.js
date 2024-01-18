@@ -6,30 +6,52 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Firstname is required"],
   },
+
   lastname: {
     type: String,
     required: [true, "Lastname is required"],
   },
-  username: {
-    type: String,
-    required: [true, "Username is required"],
-    unique: true,
-  },
+
   email: {
     type: String,
     required: [true, "Email is required"],
     unique: true,
   },
+
   mobilenumber: {
     type: String,
     required: [true, "Mobile is required"],
     unique: true,
   },
-  accountType: {
-    type: String,
-    required: [true, "Account Type is required"],
-    default: "basic",
+
+  isAddressFilled: {
+    type: Boolean,
+    default: false,
   },
+
+  address: {
+    address: {
+      type: String,
+    },
+    landmark: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    pincode: {
+      type: String,
+    },
+  },
+
+  role: {
+    type: String,
+    default: "customer",
+  },
+
   password: {
     type: String,
     required: [true, "Password is required"],

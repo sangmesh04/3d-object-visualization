@@ -4,7 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 const userRoutes = require("./routes/userRoutes");
-
+const cookieParser = require("cookie-parser");
 const app = express();
 const cors = require("cors");
 
@@ -18,6 +18,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(cookieParser());
 
 /* Connect MongoDB Atlas for Database */
 mongoose

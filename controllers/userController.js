@@ -1,25 +1,11 @@
 const User = require("../models/user");
+const { createToken } = require("../utils/createToken");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const config = require("../config/auth.config");
+const maxAge = 3 * 24 * 60 * 60;
 
 module.exports.signup = async (req, res) => {
   try {
-    const {
-      firstname,
-      lastname,
-      username,
-      email,
-      accountType,
-      mobilenumber,
-      password,
-    } = req.body;
-
-    const usernameduplicate = await User.find({ username: username });
-
-    if (usernameduplicate.length > 0) {
-      return res.status(400).json({ message: "Username already exists" });
-    }
+    const { firstname, lastname, email, mobilenumber, password } = req.body;
 
     const emailduplicate = await User.find({ email: email });
 
@@ -36,9 +22,7 @@ module.exports.signup = async (req, res) => {
     const user = await User.create({
       firstname,
       lastname,
-      username,
       email,
-      accountType,
       mobilenumber,
       password,
     });
@@ -49,37 +33,58 @@ module.exports.signup = async (req, res) => {
   }
 };
 
-module.exports.login = async (req, res) => {
-  const { username, password } = req.body;
+module.exports.getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found!", status: false });
+    }
+    var userData = JSON.parse(JSON.stringify(user));
+    delete userData["password"];
+    res.status(200).json({ user: userData, status: true });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ message: err });
+  }
+};
 
-  User.find({ username: username })
-    .then((response) => {
-      if (response.length != 0) {
-        bcrypt.compare(password, response[0].password).then((rest) => {
-          if (rest) {
-            console.log(rest);
-            var token = jwt.sign({ id: response[0].id }, config.secret, {
-              expiresIn: 86400, // 24 hours
-            });
-            res.status(202).json({
-              message: "User logged in successfully!",
-              user: response[0],
-              success: true,
-              accessToken: token,
-              role: response[0].role,
-            });
-          } else {
-            res
-              .status(401)
-              .json({ message: "Incorrect password!", success: false });
-          }
-        });
-      } else {
-        res.status(404).json({ message: "User not found!", success: false });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err, success: false });
-    });
+module.exports.profileUpdate = async (req, res) => {
+  try {
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ message: err });
+  }
+};
+
+module.exports.login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      bcrypt.compare(password, user.password).then((rest) => {
+        if (rest) {
+          const token = createToken(user._id);
+          res
+            .cookie("token", token, {
+              httpOnly: true,
+              maxAge: maxAge * 1000, // 3 days
+            })
+            .status(200)
+            .json({ user, usertype: "customer", token, success: true });
+        } else {
+          res
+            .status(400)
+            .json({ success: false, error: "Incorrect password!" });
+        }
+      });
+    } else {
+      res.status(404).json({ success: false, error: "User not found!" });
+    }
+  } catch (err) {
+    // const error = handleErrors(err);
+    console.log(err);
+    res.status(400).json({ success: false, error: err });
+  }
 };
