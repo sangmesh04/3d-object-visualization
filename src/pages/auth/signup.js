@@ -12,11 +12,9 @@ const SignupForm = () => {
   const [formValue, setformValue] = React.useState({
     firstname: "",
     lastname: "",
-    username: "",
     email: "",
     mobilenumber: "",
     password: "",
-    accountType: "",
     [pwd_confirm]: "",
   });
 
@@ -24,13 +22,12 @@ const SignupForm = () => {
     setformValue({
       firstname: "",
       lastname: "",
-      username: "",
       email: "",
       mobilenumber: "",
       password: "",
-      accountType: "",
       [pwd_confirm]: "",
     });
+    setCheckBox(false);
   };
 
   const formValidate = () => {
@@ -166,51 +163,6 @@ const SignupForm = () => {
                         className="form-control"
                         id="validationCustom02"
                       />
-                    </div>
-
-                    <div className="col-md-6">
-                      <label
-                        for="validationCustomUsername"
-                        className="form-label"
-                      >
-                        Username
-                      </label>
-                      <div className="input-group has-validation">
-                        <span
-                          className="input-group-text"
-                          id="inputGroupPrepend"
-                        >
-                          @
-                        </span>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="validationCustomUsername"
-                          aria-describedby="inputGroupPrepend"
-                          name="username"
-                          value={formValue.username}
-                          onChange={handleChange}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="col-md-6">
-                      <label for="validationCustom04" className="form-label">
-                        Account type
-                      </label>
-                      <select
-                        className="form-select"
-                        name="accountType"
-                        value={formValue.accountType}
-                        onChange={handleChange}
-                        id="validationCustom04"
-                      >
-                        <option selected disabled value="">
-                          Choose...
-                        </option>
-                        <option value="BASIC">Basic</option>
-                        <option value="PREMIUM">Premium</option>
-                      </select>
                     </div>
 
                     <div className="col-md-4">

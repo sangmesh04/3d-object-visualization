@@ -2,6 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import LoginForm from "./pages/auth/login";
 import SignupForm from "./pages/auth/signup";
 import Home from "./pages/landing/home";
+import CustomerDashboard from "./pages/customer/dashboard";
+import Navbar from "./pages/components/navbar";
+import CustomerProfile from "./pages/customer/profile";
 
 function App() {
   return (
@@ -9,7 +12,15 @@ function App() {
       <Routes>
         <Route path="*" index element={<LoginForm />} />
         <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<SignupForm />} />
+        <Route path="signup" element={<SignupForm />} />
+
+        {/* customer routes  */}
+        <Route>
+          <Route path="customer" element={<Navbar />}>
+            <Route path="dashboard" element={<CustomerDashboard />} />
+            <Route path="profile" element={<CustomerProfile />} />
+          </Route>
+        </Route>
       </Routes>
     </div>
   );

@@ -1,23 +1,32 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import "../../assets/css/style.css";
 import loginbg from "../../assets/img/login-bg.jpg";
 import axiosInstance from "../../axios";
+import { useCookies } from "react-cookie";
+import axios from "axios";
 
 const LoginForm = () => {
   const [isLoading, setLoading] = useState(false);
+  const [cookies, setCookie] = useCookies(["usertype", "token1"]);
 
   const [formValue, setformValue] = React.useState({
-    username: "",
+    email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const formValidate = () => {
     setLoading(true);
     // console.log("Something");
-    if (formValue.username === "") {
-      toast.error("Username can't be empty!");
+
+    var reEmail =
+      /^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/;
+
+    if (!formValue.email.match(reEmail)) {
+      toast.error("Email is not valid!");
       setLoading(false);
     } else if (formValue.password === "") {
       toast.error("Password can't be empty!");
@@ -29,17 +38,22 @@ const LoginForm = () => {
     // }
     else {
       setLoading(true);
-      axiosInstance
-        .post("/user/login", formValue)
+      axios
+        .post("http://localhost:8080/user/login", formValue, {
+          withCredentials: true,
+        })
         .then((res) => {
-          console.log(res.data);
           if (res.data.success === true) {
-            toast.success("Login Successful!");
+            toast.success("Login successful!");
             setLoading(false);
-            console.log(res.data);
+            localStorage.setItem("accessToken", res.data.token);
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+            // setCookie("token1", res.data.token, { path: "/", maxAge: 43200 }); // 30 days
+            setCookie("usertype", "customer", { path: "/", maxAge: 43200 });
             setformValue({ username: "", password: "" });
+            navigate("/customer/dashboard");
           } else {
-            toast.error("Login Failed!");
+            toast.error("Login failed!");
             setLoading(false);
           }
         })
@@ -94,18 +108,18 @@ const LoginForm = () => {
                 <main className="form-signin w-100 m-auto">
                   <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">
-                      Username
+                      Email
                     </label>
                     <input
-                      type="username"
+                      type="text"
                       className="form-control"
-                      name="username"
-                      value={formValue.username}
+                      name="email"
+                      value={formValue.email}
                       onChange={handleChange}
                       id="exampleInputEmail1"
                     />
                     <div id="emailHelp" className="form-text">
-                      Enter username
+                      Enter email
                     </div>
                   </div>
                   <div className="mb-3">

@@ -70,3 +70,16 @@
     }
   }
   
+
+  /* navbar styles  */
+  .customerNavbar a{
+    text-decoration: none;
+    color: #343a40;
+  }
+
+  .customerNavbar a:hover{
+    color: #343a40;
+  }
+  #signout:hover{
+    color: rgba(255, 0, 0, 0.468);
+  }
