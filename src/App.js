@@ -5,6 +5,7 @@ import Home from "./pages/landing/home";
 import CustomerDashboard from "./pages/customer/dashboard";
 import Navbar from "./pages/components/navbar";
 import CustomerProfile from "./pages/customer/profile";
+import RequireAuth from "./pages/auth/requireAuth";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
         <Route path="signup" element={<SignupForm />} />
 
         {/* customer routes  */}
-        <Route>
+        <Route element={<RequireAuth allowedRoles={"customer"} />}>
           <Route path="customer" element={<Navbar />}>
             <Route path="dashboard" element={<CustomerDashboard />} />
             <Route path="profile" element={<CustomerProfile />} />

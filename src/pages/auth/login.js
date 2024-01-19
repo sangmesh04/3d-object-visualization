@@ -48,7 +48,7 @@ const LoginForm = () => {
             setLoading(false);
             localStorage.setItem("accessToken", res.data.token);
             localStorage.setItem("user", JSON.stringify(res.data.user));
-            // setCookie("token1", res.data.token, { path: "/", maxAge: 43200 }); // 30 days
+            setCookie("token1", res.data.token, { path: "/", maxAge: 43200 }); // 30 days
             setCookie("usertype", "customer", { path: "/", maxAge: 43200 });
             setformValue({ username: "", password: "" });
             navigate("/customer/dashboard");

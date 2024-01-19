@@ -1,11 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../axios";
+import toast from "react-hot-toast";
 
 const CustomerProfile = () => {
   const [loading, setLoading] = useState(false);
 
   const [authToken, setAuthToken] = useState("");
+
+  const [update, setUpdate] = useState(false);
 
   const [formValue, setformValue] = React.useState({
     firstname: "",
@@ -104,7 +107,8 @@ const CustomerProfile = () => {
     axiosInstance
       .get("/user/profile")
       .then((res) => {
-        setformValue(res.data);
+        setformValue(res.data.user);
+        setAddress(res.data.user.address);
         setLoading(false);
       })
       .catch((err) => {
@@ -113,12 +117,57 @@ const CustomerProfile = () => {
       });
   }, []);
 
+  const updateProfile = () => {
+    setLoading(true);
+    if (formValue.firstname === "") {
+      toast.error("Firstname can not be empty!");
+      setLoading(false);
+    } else if (formValue.lastname === "") {
+      toast.error("Lastname can not be empty!");
+      setLoading(false);
+    } else if (
+      address.address === "" ||
+      address.city === "" ||
+      address.landmark === "" ||
+      address.pincode.length != 6 ||
+      address.state === ""
+    ) {
+      toast.error("Kindly fill correct address details!");
+      setLoading(false);
+    } else {
+      const data = {};
+      data.user = { ...formValue };
+      data.address = address;
+      data.isAddressFilled = true;
+      axiosInstance
+        .post("/user/profile/update", { ...data })
+        .then((res) => {
+          toast.success("User data updated successfully!");
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error("Something went wrong!");
+          setLoading(false);
+        });
+    }
+  };
+
   const handleChange = (event) => {
     setformValue({
       ...formValue,
       [event.target.name]: event.target.value,
     });
   };
+
+  if (loading) {
+    return (
+      <div className="text-center my-3">
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -270,6 +319,7 @@ const CustomerProfile = () => {
                   <button
                     className="btn btn-primary"
                     style={{ float: "right" }}
+                    onClick={updateProfile}
                   >
                     Update
                   </button>
