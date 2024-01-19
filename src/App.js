@@ -6,6 +6,7 @@ import CustomerDashboard from "./pages/customer/dashboard";
 import Navbar from "./pages/components/navbar";
 import CustomerProfile from "./pages/customer/profile";
 import RequireAuth from "./pages/auth/requireAuth";
+import AllProducts from "./pages/customer/products/allProducts";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="customer" element={<Navbar />}>
             <Route path="dashboard" element={<CustomerDashboard />} />
             <Route path="profile" element={<CustomerProfile />} />
+            <Route path="products" element={<AllProducts />} />
           </Route>
         </Route>
       </Routes>

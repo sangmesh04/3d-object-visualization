@@ -61,6 +61,11 @@ const Navbar = () => {
               </a>
               <ul class="dropdown-menu text-small">
                 <li>
+                  <Link class="dropdown-item" to="/customer/products">
+                    Products
+                  </Link>
+                </li>
+                <li>
                   <a class="dropdown-item" href="#">
                     Cart
                   </a>

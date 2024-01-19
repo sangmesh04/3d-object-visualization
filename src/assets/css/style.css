@@ -53,6 +53,7 @@
     height: 100vh;
     background: url(../img/hero-bg.png) top center no-repeat;
     background-size: cover;
+    padding-top: 12px;
   }
 
   @media screen and (min-width:768px) and (max-width:992px) {
@@ -70,9 +71,12 @@
     }
   }
   
+  a:hover{
+    cursor: pointer;
+  }
 
   /* navbar styles  */
-  .customerNavbar a{
+  .customerNavbar a, .products a{
     text-decoration: none;
     color: #343a40;
   }
@@ -82,4 +86,10 @@
   }
   #signout:hover{
     color: rgba(255, 0, 0, 0.468);
+  }
+
+  /* products styles  */
+
+  .products{
+    padding: 30px;
   }
