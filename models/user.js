@@ -30,21 +30,8 @@ const userSchema = new mongoose.Schema({
   },
 
   address: {
-    address: {
-      type: String,
-    },
-    landmark: {
-      type: String,
-    },
-    state: {
-      type: String,
-    },
-    city: {
-      type: String,
-    },
-    pincode: {
-      type: String,
-    },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Address",
   },
 
   role: {

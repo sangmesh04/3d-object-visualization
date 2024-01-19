@@ -9,4 +9,6 @@ router.post("/user/login", userController.login);
 
 router.get("/user/profile", authUser, userController.getProfile);
 
+router.post("/user/profile/update", authUser, userController.profileUpdate);
+
 module.exports = router;

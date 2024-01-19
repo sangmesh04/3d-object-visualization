@@ -5,15 +5,15 @@ const mongoose = require("mongoose");
 
 const userRoutes = require("./routes/userRoutes");
 const cookieParser = require("cookie-parser");
-const app = express();
 const cors = require("cors");
+const app = express();
 
 const port = process.env.PORT || 8080;
 
 // built-in middlewares
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );

@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Address = require("../models/address");
 const { createToken } = require("../utils/createToken");
 const bcrypt = require("bcryptjs");
 const maxAge = 3 * 24 * 60 * 60;
@@ -35,7 +36,9 @@ module.exports.signup = async (req, res) => {
 
 module.exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).populate({
+      path: "address",
+    });
     if (!user) {
       return res
         .status(404)
@@ -52,6 +55,19 @@ module.exports.getProfile = async (req, res) => {
 
 module.exports.profileUpdate = async (req, res) => {
   try {
+    const updatedUser = req.body.user;
+    const address = req.body.address;
+    const newaddress = await Address.updateOne(
+      { _id: updatedUser.address },
+      { $set: { ...address }, options: { upsert: true } }
+    );
+    const user = await User.updateOne(
+      { _id: req.user._id },
+      { $set: { ...updatedUser, address: newaddress._id } }
+    );
+    res
+      .status(200)
+      .json({ status: true, message: "User data updated successfully!" });
   } catch (err) {
     console.log(err);
     res.status(400).json({ message: err });
@@ -66,11 +82,11 @@ module.exports.login = async (req, res) => {
       bcrypt.compare(password, user.password).then((rest) => {
         if (rest) {
           const token = createToken(user._id);
+          res.cookie("token", token, {
+            httpOnly: true,
+            maxAge: maxAge * 1000, // 3 days
+          });
           res
-            .cookie("token", token, {
-              httpOnly: true,
-              maxAge: maxAge * 1000, // 3 days
-            })
             .status(200)
             .json({ user, usertype: "customer", token, success: true });
         } else {
