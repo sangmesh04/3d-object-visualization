@@ -76,7 +76,7 @@
   }
 
   /* navbar styles  */
-  .customerNavbar a, .products a{
+  .customerNavbar a, .products a, .categories a{
     text-decoration: none;
     color: #343a40;
   }
@@ -90,6 +90,6 @@
 
   /* products styles  */
 
-  .products{
+  .products, .categories{
     padding: 30px;
   }
