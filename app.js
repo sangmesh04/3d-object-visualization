@@ -4,6 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 const userRoutes = require("./routes/userRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
@@ -34,3 +35,4 @@ mongoose
   });
 
 app.use(userRoutes);
+app.use(adminRoutes);

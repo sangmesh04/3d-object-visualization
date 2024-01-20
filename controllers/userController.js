@@ -88,7 +88,7 @@ module.exports.login = async (req, res) => {
           });
           res
             .status(200)
-            .json({ user, usertype: "customer", token, success: true });
+            .json({ user, usertype: user.role, token, success: true });
         } else {
           res
             .status(400)

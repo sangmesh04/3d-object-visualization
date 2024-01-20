@@ -11,7 +11,7 @@ const authUser = async (req, res, next) => {
       } else {
         const user = await User.findById(decodedToken.id);
         if (user) {
-          if (user.role === "customer") {
+          if (user.role === "admin") {
             req.user = user;
             next();
           } else {
