@@ -49,16 +49,19 @@ const LoginForm = () => {
             localStorage.setItem("accessToken", res.data.token);
             localStorage.setItem("user", JSON.stringify(res.data.user));
             setCookie("token1", res.data.token, { path: "/", maxAge: 43200 }); // 30 days
-            setCookie("usertype", "customer", { path: "/", maxAge: 43200 });
+            setCookie("usertype", res.data.usertype, {
+              path: "/",
+              maxAge: 43200,
+            });
             setformValue({ username: "", password: "" });
-            navigate("/customer/dashboard");
+            navigate(`/${res.data.usertype}/dashboard`);
           } else {
             toast.error("Login failed!");
             setLoading(false);
           }
         })
         .catch((err) => {
-          toast.error(err.response.data.message);
+          toast.error(err.response.data.error);
           setLoading(false);
         });
     }

@@ -59,41 +59,76 @@ const Navbar = () => {
               >
                 {user?.firstname ? user.firstname : "User"}
               </a>
-              <ul class="dropdown-menu text-small">
-                <li>
-                  <Link class="dropdown-item" to="/customer/products">
-                    Products
-                  </Link>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#">
-                    Cart
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#">
-                    Orders
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#">
-                    Settings
-                  </a>
-                </li>
-                <li>
-                  <Link class="dropdown-item" to="/customer/profile">
-                    Profile
-                  </Link>
-                </li>
-                <li>
-                  <hr class="dropdown-divider" />
-                </li>
-                <li>
-                  <a class="dropdown-item" id="signout" href="#">
-                    Sign out
-                  </a>
-                </li>
-              </ul>
+              {user.role === "customer" ? (
+                <ul class="dropdown-menu text-small">
+                  <li>
+                    <Link class="dropdown-item" to="/customer/products">
+                      Products
+                    </Link>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#">
+                      Cart
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#">
+                      Orders
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#">
+                      Settings
+                    </a>
+                  </li>
+                  <li>
+                    <Link class="dropdown-item" to="/customer/profile">
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider" />
+                  </li>
+                  <li>
+                    <a class="dropdown-item" id="signout" href="#">
+                      Sign out
+                    </a>
+                  </li>
+                </ul>
+              ) : user.role === "admin" ? (
+                <ul class="dropdown-menu text-small">
+                  <li>
+                    <Link class="dropdown-item" to="/admin/category">
+                      Category
+                    </Link>
+                  </li>
+                  <li>
+                    <Link class="dropdown-item" to="/admin/products">
+                      Products
+                    </Link>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#">
+                      Orders
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#">
+                      Settings
+                    </a>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider" />
+                  </li>
+                  <li>
+                    <a class="dropdown-item" id="signout" href="#">
+                      Sign out
+                    </a>
+                  </li>
+                </ul>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>

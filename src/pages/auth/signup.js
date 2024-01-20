@@ -84,7 +84,7 @@ const SignupForm = () => {
   const submitSignUp = () => {
     setLoading(true);
     axiosInstance
-      .post("/user/signup", formValue)
+      .post("/user/signup", { ...formValue })
       .then((res) => {
         if (res.data.status === true) {
           toast.success("Successfully signed up!");
@@ -97,7 +97,7 @@ const SignupForm = () => {
       })
       .catch((err) => {
         console.log(err);
-        toast.error(err.response.data.message);
+        toast.error("Something went wrong!");
         setLoading(false);
       });
   };
