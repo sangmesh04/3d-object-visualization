@@ -88,6 +88,10 @@
     color: rgba(255, 0, 0, 0.468);
   }
 
+  .deleteItem:hover{
+    color: rgba(255, 0, 0, 0.67);
+  }
+
   /* products styles  */
 
   .products, .categories{

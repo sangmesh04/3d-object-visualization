@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import axiosInstance from "../../../axios";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
-const AddProduct = () => {
+const AddProduct = (props) => {
   const [isLoading, setLoading] = useState(false);
   const [fileName, setFileName] = useState("");
   const [formValue, setFormValue] = useState({
@@ -80,6 +80,7 @@ const AddProduct = () => {
           .then((res) => {
             toast.dismiss(load);
             toast.success("Product added successfully!");
+            props.setUpdate(!props.update);
             setFormValue({
               name: "",
               description: "",

@@ -6,6 +6,7 @@ import AddProduct from "./addProduct";
 const AllAdminProducts = () => {
   const [isLoading, setLoading] = useState(false);
   const [productData, setProductData] = useState([]);
+  const [update, setUpdate] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -20,7 +21,28 @@ const AllAdminProducts = () => {
         console.log(err);
         toast.error("Something went wrong!");
       });
-  }, []);
+  }, [update]);
+
+  const handleDeleteProduct = (id) => {
+    const load = toast.loading("loading...");
+    var confirm = prompt("Enter 'confirm' to delete!");
+    if (confirm === "confirm") {
+      axiosInstance
+        .delete(`/product/delete/${id}`)
+        .then((res) => {
+          toast.dismiss(load);
+          toast.success("Product deleted successfully!");
+          setUpdate(!update);
+        })
+        .catch((err) => {
+          toast.dismiss(load);
+          toast.error("Something went wrong");
+        });
+    } else {
+      toast.dismiss(load);
+      toast.error("Delete operation cancelled!");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -117,17 +139,11 @@ const AllAdminProducts = () => {
                         <i className="bi bi-cart"></i> Add to cart
                       </a>
                       <a
-                        // onClick={() => setProductWish(!productWish)}
-                        title="Add to wishlist"
+                        href="#"
+                        onClick={() => handleDeleteProduct(product._id)}
+                        className="deleteItem"
                       >
-                        {false ? (
-                          <i
-                            className="bi bi-heart-fill"
-                            style={{ color: "#dc3545" }}
-                          ></i>
-                        ) : (
-                          <i className="bi bi-heart"></i>
-                        )}
+                        <i className="bi bi-trash3"></i> Delete
                       </a>
                     </p>
                   </div>
@@ -136,7 +152,7 @@ const AllAdminProducts = () => {
             ))}
           </div>
         </div>
-        <AddProduct />
+        <AddProduct update={update} setUpdate={setUpdate} />
       </div>
     </>
   );

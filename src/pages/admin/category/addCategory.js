@@ -3,7 +3,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import axiosInstance from "../../../axios";
 
-const AddCategory = () => {
+const AddCategory = (props) => {
   const [isLoading, setLoading] = useState(false);
   const [fileName, setFileName] = useState("");
   const [formValue, setFormValue] = useState({
@@ -51,6 +51,7 @@ const AddCategory = () => {
           .then((res) => {
             toast.dismiss(load);
             toast.success("Category added successfully!");
+            props.setUpdate(!props.update);
             setFormValue({
               name: "",
               description: "",

@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 const AllCategory = () => {
   const [isLoading, setLoading] = useState(false);
   const [categoryData, setCategoryData] = useState([]);
-
+  const [update, setUpdate] = useState(false);
   useEffect(() => {
     setLoading(true);
     axiosInstance
@@ -19,7 +19,28 @@ const AllCategory = () => {
         setLoading(false);
         toast.error("Something went wrong!");
       });
-  }, []);
+  }, [update]);
+
+  const handleDeleteCategory = (id) => {
+    const load = toast.loading("loading...");
+    var confirm = prompt("Enter 'confirm' to delete!");
+    if (confirm === "confirm") {
+      axiosInstance
+        .delete(`/category/delete/${id}`)
+        .then((res) => {
+          toast.dismiss(load);
+          toast.success("Category deleted successfully!");
+          setUpdate(!update);
+        })
+        .catch((err) => {
+          toast.dismiss(load);
+          toast.error("Something went wrong");
+        });
+    } else {
+      toast.dismiss(load);
+      toast.error("Delete operation cancelled!");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -107,6 +128,13 @@ const AllCategory = () => {
                       <a href="#">
                         <i className="bi bi-eye"></i> View products
                       </a>
+                      <a
+                        href="#"
+                        onClick={() => handleDeleteCategory(cat._id)}
+                        className="deleteItem"
+                      >
+                        <i className="bi bi-trash3"></i> Delete
+                      </a>
                     </p>
                   </div>
                 </div>
@@ -114,7 +142,7 @@ const AllCategory = () => {
             ))}
           </div>
         </div>
-        <AddCategory />
+        <AddCategory update={update} setUpdate={setUpdate} />
       </div>
     </>
   );
