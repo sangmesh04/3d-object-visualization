@@ -9,6 +9,7 @@ import RequireAuth from "./pages/auth/requireAuth";
 import AllProducts from "./pages/customer/products/allProducts";
 import AdminDashboard from "./pages/admin/adminDashboard";
 import AllCategory from "./pages/admin/category/allCategory";
+import AllAdminProducts from "./pages/admin/products/allProducts";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="admin" element={<Navbar />}>
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="category" element={<AllCategory />} />
+            <Route path="products" element={<AllAdminProducts />} />
           </Route>
         </Route>
       </Routes>

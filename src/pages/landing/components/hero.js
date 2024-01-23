@@ -7,10 +7,10 @@ const LandingHero = () => {
     <>
       <div className="landing" id="hero">
         {/* <!-- ======= Hero Section ======= --> */}
-        <section id="hero" class="hero d-flex align-items-center">
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-6 d-flex flex-column justify-content-center">
+        <section id="hero" className="hero d-flex align-items-center">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-6 d-flex flex-column justify-content-center">
                 <h1 data-aos="fade-up">
                   Visualize 3D models of products before making a purchase
                   decision
@@ -21,23 +21,23 @@ const LandingHero = () => {
                   making a purchase decision.
                 </h2>
                 <div data-aos="fade-up" data-aos-delay="600">
-                  <div class="text-center text-lg-start">
+                  <div className="text-center text-lg-start">
                     <Link
                       to="/login"
-                      class="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
+                      className="btn-get-started scrollto d-inline-flex align-items-center justify-content-center align-self-center"
                     >
                       <span>Get Started</span>
-                      <i class="bi bi-arrow-right"></i>
+                      <i className="bi bi-arrow-right"></i>
                     </Link>
                   </div>
                 </div>
               </div>
               <div
-                class="col-lg-6 hero-img"
+                className="col-lg-6 hero-img"
                 data-aos="zoom-out"
                 data-aos-delay="200"
               >
-                {/* <img src={hero} class="img-fluid" alt="" /> */}
+                {/* <img src={hero} className="img-fluid" alt="" /> */}
                 <model-viewer
                   className="viewer"
                   style={{

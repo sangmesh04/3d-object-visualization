@@ -1,45 +1,80 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import axiosInstance from "../../../axios";
 
-const AddCategory = () => {
+const AddProduct = () => {
   const [isLoading, setLoading] = useState(false);
   const [formValue, setFormValue] = useState({
     name: "",
     description: "",
     image: null,
+    price: 0,
+    quantity: -1,
+    category: "",
   });
 
-  const addCategory = () => {
+  const [categoryList, setCategoryList] = useState([]);
+
+  useEffect(() => {
+    setLoading(true);
+    axiosInstance
+      .get("/categoryList")
+      .then((res) => {
+        setCategoryList(res.data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        toast.error(err);
+        setLoading(false);
+      });
+  }, []);
+
+  const handleAddProduct = () => {
     setLoading(true);
     if (formValue.name === "") {
-      toast.error("Enter category name!");
+      toast.error("Enter product name!");
+      setLoading(false);
+    } else if (formValue.category === "") {
+      toast.error("Select a category!");
       setLoading(false);
     } else if (formValue.description === "") {
-      toast.error("Enter category description!");
+      toast.error("Enter product description!");
+      setLoading(false);
+    } else if (formValue.price <= 0) {
+      toast.error("Enter valid price for the product!");
+      setLoading(false);
+    } else if (formValue.quantity < 0) {
+      toast.error("Enter valid product quantity!");
       setLoading(false);
     } else if (formValue.image === null) {
-      toast.error("Kindly select a category image!");
+      toast.error("Select a product 3d image (.glb format)!");
       setLoading(false);
     } else {
       const formData = new FormData();
       formData.append("image", formValue.image);
       formData.append("name", formValue.name);
       formData.append("description", formValue.description);
+      formData.append("price", formValue.price);
+      formData.append("quantity", formValue.quantity);
+      formData.append("category", formValue.category);
       const config = {
         headers: { "content-type": "multipart/form-data" },
         withCredentials: true,
       };
       axios
-        .post(`http://localhost:8080/category/add`, formData, config)
+        .post(`http://localhost:8080/product/add`, formData, config)
         .then((res) => {
           // console.log("Second ", res.data);
           setFormValue({
             name: "",
             description: "",
             image: null,
+            price: 0,
+            quantity: -1,
+            category: "",
           });
-          toast.success("Category added successfully!");
+          toast.success("Product added successfully!");
           setLoading(false);
         })
         .catch((err) => {
@@ -73,7 +108,7 @@ const AddCategory = () => {
       >
         <div className="offcanvas-header">
           <h5 className="offcanvas-title" id="staticBackdropLabel">
-            Add Category
+            Add Product
           </h5>
           <button
             type="button"
@@ -99,6 +134,26 @@ const AddCategory = () => {
               />
             </div>
             <div className="col-md-12">
+              <label htmlFor="category" className="form-label">
+                Select category
+              </label>
+              <select
+                className="form-select"
+                name="category"
+                onChange={(e) =>
+                  setFormValue({ ...formValue, category: e.target.value })
+                }
+                id="category"
+              >
+                <option selected disabled value="">
+                  Choose...
+                </option>
+                {categoryList.map((cat) => (
+                  <option value={cat._id}>{cat.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-12">
               <label htmlFor="description" className="form-label">
                 Description
               </label>
@@ -112,14 +167,42 @@ const AddCategory = () => {
                 id="description"
               />
             </div>
+            <div className="col-md-6">
+              <label htmlFor="price" className="form-label">
+                Price
+              </label>
+              <input
+                type="number"
+                name="price"
+                className="form-control"
+                onChange={(e) =>
+                  setFormValue({ ...formValue, price: e.target.value })
+                }
+                id="price"
+              />
+            </div>
+            <div className="col-md-6">
+              <label htmlFor="quantity" className="form-label">
+                Quantity
+              </label>
+              <input
+                type="number"
+                name="quantity"
+                className="form-control"
+                onChange={(e) =>
+                  setFormValue({ ...formValue, quantity: e.target.value })
+                }
+                id="quantity"
+              />
+            </div>
             <div className="col-md-12">
               <label htmlFor="cat-img" className="form-label">
                 Select image
               </label>
               <input
                 type="file"
-                name="searchText"
-                accept=".jpg, .png, .jpeg"
+                name="image"
+                accept=".glb, .usdz"
                 className="form-control"
                 onChange={(e) =>
                   setFormValue({ ...formValue, image: e.target.files[0] })
@@ -130,7 +213,7 @@ const AddCategory = () => {
             <div className="col-md-12">
               <button
                 className="btn btn-primary"
-                onClick={addCategory}
+                onClick={handleAddProduct}
                 style={{ float: "right" }}
               >
                 Add
@@ -143,4 +226,4 @@ const AddCategory = () => {
   );
 };
 
-export default AddCategory;
+export default AddProduct;

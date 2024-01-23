@@ -1,22 +1,23 @@
 import { useEffect, useState } from "react";
-import AddCategory from "./addCategory";
 import axiosInstance from "../../../axios";
 import toast from "react-hot-toast";
+import AddProduct from "./addProduct";
 
-const AllCategory = () => {
+const AllAdminProducts = () => {
   const [isLoading, setLoading] = useState(false);
-  const [categoryData, setCategoryData] = useState([]);
+  const [productData, setProductData] = useState([]);
 
   useEffect(() => {
     setLoading(true);
     axiosInstance
-      .get("/category")
+      .get("/products/")
       .then((res) => {
-        setCategoryData(res.data.data);
+        setProductData(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
         setLoading(false);
+        console.log(err);
         toast.error("Something went wrong!");
       });
   }, []);
@@ -34,7 +35,7 @@ const AllCategory = () => {
   return (
     <>
       <div className="hero">
-        <h1>Category</h1>
+        <h1>Product</h1>
         <main className="form-signup w-100 m-auto">
           <div className="row g-3" style={{ alignItems: "center" }}>
             <div className="col-md-8">
@@ -72,15 +73,28 @@ const AllCategory = () => {
         </main>
         <div className="categories">
           <div className="row">
-            {categoryData.map((cat) => (
+            {productData.map((product) => (
               <div className="col-md-3" style={{ marginBottom: "12px" }}>
                 <div className="card">
-                  <img
-                    src={cat.image}
-                    alt="Category Image"
-                    srcset=""
-                    className="img-fluid"
-                  />
+                  <model-viewer
+                    className="viewer card-img-top"
+                    style={{
+                      height: "250px",
+                      width: "100%",
+                      backgroundColor: "#17171A!important",
+                    }}
+                    // src={
+                    //   "D:/BE/BE Project/be-84-implementation/backend" +
+                    //   product.image
+                    // }
+                    // ios-src={chairUsdz}
+                    ar
+                    alt="A 3D model of a chair"
+                    camera-orbit="-90deg"
+                    auto-rotate=""
+                    camera-controls=""
+                    background-color="#455A64"
+                  ></model-viewer>
                   <hr />
                   <div className="card-body" style={{ padding: "0 11px" }}>
                     <p
@@ -92,12 +106,10 @@ const AllCategory = () => {
                         marginBottom: "0rem",
                       }}
                     >
-                      <span>{cat.name}</span>
+                      <span>{product.name}</span>
+                      <span>₹ {product.price}</span>
                     </p>{" "}
                     <br />
-                    <p style={{ textAlign: "left", fontStyle: "italic" }}>
-                      {cat.description}
-                    </p>
                     <p
                       style={{
                         display: "flex",
@@ -105,7 +117,20 @@ const AllCategory = () => {
                       }}
                     >
                       <a href="#">
-                        <i className="bi bi-eye"></i> View products
+                        <i className="bi bi-cart"></i> Add to cart
+                      </a>
+                      <a
+                        // onClick={() => setProductWish(!productWish)}
+                        title="Add to wishlist"
+                      >
+                        {false ? (
+                          <i
+                            className="bi bi-heart-fill"
+                            style={{ color: "#dc3545" }}
+                          ></i>
+                        ) : (
+                          <i className="bi bi-heart"></i>
+                        )}
                       </a>
                     </p>
                   </div>
@@ -114,10 +139,10 @@ const AllCategory = () => {
             ))}
           </div>
         </div>
-        <AddCategory />
+        <AddProduct />
       </div>
     </>
   );
 };
 
-export default AllCategory;
+export default AllAdminProducts;

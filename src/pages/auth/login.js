@@ -100,12 +100,12 @@ const LoginForm = () => {
       {/* <!-- ======= Hero Section ======= --> */}
       <section
         id="hero"
-        class="hero d-flex align-items-center"
+        className="hero d-flex align-items-center"
         style={{ height: "91vh" }}
       >
-        <div class="container" style={{ marginTop: "-10rem" }}>
-          <div class="row" id="signincompo">
-            <div class="col-lg-6 d-flex flex-column justify-content-center">
+        <div className="container" style={{ marginTop: "-10rem" }}>
+          <div className="row" id="signincompo">
+            <div className="col-lg-6 d-flex flex-column justify-content-center">
               <div id="signInForm">
                 <h1 data-aos="fade-up">Welcome back!</h1>
                 <main className="form-signin w-100 m-auto">
@@ -171,7 +171,7 @@ const LoginForm = () => {
               </div>
             </div>
             <div
-              class="col-lg-6 hero-img"
+              className="col-lg-6 hero-img"
               data-aos="zoom-out"
               data-aos-delay="200"
               style={{ marginTop: "25px", lineHeight: "30" }}
@@ -179,7 +179,7 @@ const LoginForm = () => {
               <img
                 src={loginbg}
                 style={{ borderRadius: "18px" }}
-                class="img-fluid"
+                className="img-fluid"
                 alt=""
               />
             </div>

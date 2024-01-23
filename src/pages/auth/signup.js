@@ -128,12 +128,12 @@ const SignupForm = () => {
 
       <section
         id="hero"
-        class="hero d-flex align-items-center"
+        className="hero d-flex align-items-center"
         style={{ height: "91vh" }}
       >
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-12 d-flex flex-column justify-content-center">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12 d-flex flex-column justify-content-center">
               <div id="signInForm1" className="signupform1">
                 <h1 data-aos="fade-up">We are delighted to have you here!</h1>
                 <main className="form-signup w-100 m-auto">
@@ -253,11 +253,11 @@ const SignupForm = () => {
               </div>
             </div>
             {/* <div
-              class="col-lg-6 hero-img"
+              className="col-lg-6 hero-img"
               data-aos="zoom-out"
               data-aos-delay="200"
             >
-              <img src={signup} class="img-fluid" alt="" />
+              <img src={signup} className="img-fluid" alt="" />
             </div> */}
           </div>
         </div>

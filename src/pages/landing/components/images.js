@@ -27,9 +27,9 @@ const Images = () => {
     <>
       <div className="landing" id="screenshots">
         {/* <!-- ======= Features Section ======= --> */}
-        <section id="features" class="features">
-          <div class="container" data-aos="fade-up">
-            <header class="section-header">
+        <section id="features" className="features">
+          <div className="container" data-aos="fade-up">
+            <header className="section-header">
               <h2>Screenshots</h2>
               <p>Some glimpse of our application</p>
             </header>

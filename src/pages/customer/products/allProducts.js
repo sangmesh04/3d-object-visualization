@@ -42,7 +42,7 @@ const AllProducts = () => {
                   data-bs-target="#staticBackdrop"
                   aria-controls="staticBackdrop"
                 >
-                  <i class="bi bi-filter"></i> Filter
+                  <i className="bi bi-filter"></i> Filter
                 </a>
               </div>
             </div>
@@ -51,7 +51,7 @@ const AllProducts = () => {
             <div className="row">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((e) => (
                 <div className="col-md-3" style={{ marginBottom: "12px" }}>
-                  <div class="card">
+                  <div className="card">
                     <model-viewer
                       className="viewer card-img-top"
                       style={{
@@ -69,9 +69,9 @@ const AllProducts = () => {
                       background-color="#455A64"
                     ></model-viewer>
                     <hr />
-                    <div class="card-body" style={{ padding: "0 11px" }}>
+                    <div className="card-body" style={{ padding: "0 11px" }}>
                       <p
-                        class="card-text"
+                        className="card-text"
                         style={{
                           textAlign: "left",
                           display: "flex",
@@ -90,7 +90,7 @@ const AllProducts = () => {
                         }}
                       >
                         <a href="#">
-                          <i class="bi bi-cart"></i> Add to cart
+                          <i className="bi bi-cart"></i> Add to cart
                         </a>
                         <a
                           onClick={() => setProductWish(!productWish)}
@@ -98,11 +98,11 @@ const AllProducts = () => {
                         >
                           {productWish ? (
                             <i
-                              class="bi bi-heart-fill"
+                              className="bi bi-heart-fill"
                               style={{ color: "#dc3545" }}
                             ></i>
                           ) : (
-                            <i class="bi bi-heart"></i>
+                            <i className="bi bi-heart"></i>
                           )}
                         </a>
                       </p>
@@ -116,24 +116,24 @@ const AllProducts = () => {
 
         {/* filter offcanvas */}
         <div
-          class="offcanvas offcanvas-start"
+          className="offcanvas offcanvas-start"
           data-bs-backdrop="static"
-          tabindex="-1"
+          tabIndex="-1"
           id="staticBackdrop"
           aria-labelledby="staticBackdropLabel"
         >
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="staticBackdropLabel">
+          <div className="offcanvas-header">
+            <h5 className="offcanvas-title" id="staticBackdropLabel">
               Filter
             </h5>
             <button
               type="button"
-              class="btn-close"
+              className="btn-close"
               data-bs-dismiss="offcanvas"
               aria-label="Close"
             ></button>
           </div>
-          <div class="offcanvas-body">
+          <div className="offcanvas-body">
             <div>I will not close if you click outside of me.</div>
           </div>
         </div>

@@ -24,20 +24,20 @@ const LandingNavbar = () => {
       <div className="landing">
         <header
           id="header"
-          class="header fixed-top"
+          className="header fixed-top"
           //   style={{ backgroundColor: "lightblue", backdropFilter: "blur(10px)" }}
         >
-          <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
-            <Link href="/" class="logo d-flex align-items-center">
+          <div className="container-fluid container-xl d-flex align-items-center justify-content-between">
+            <Link href="/" className="logo d-flex align-items-center">
               {/* <img src={logo} alt="logo" /> */}
               <span>3D Object Visualization</span>
             </Link>
 
-            <nav id="navbar" class="navbar">
+            <nav id="navbar" className="navbar">
               <ul>
                 <li>
                   <a
-                    class="nav-link scrollto"
+                    className="nav-link scrollto"
                     onClick={HideNavbar}
                     href="#hero"
                   >
@@ -46,7 +46,7 @@ const LandingNavbar = () => {
                 </li>
                 {/* <li>
                   <a
-                    class="nav-link scrollto"
+                    className="nav-link scrollto"
                     onClick={HideNavbar}
                     href="#about"
                   >
@@ -55,7 +55,7 @@ const LandingNavbar = () => {
                 </li>
                 <li>
                   <a
-                    class="nav-link scrollto"
+                    className="nav-link scrollto"
                     onClick={HideNavbar}
                     href="#services"
                   >
@@ -64,7 +64,7 @@ const LandingNavbar = () => {
                 </li> */}
                 <li>
                   <a
-                    class="nav-link scrollto"
+                    className="nav-link scrollto"
                     onClick={HideNavbar}
                     href="#features"
                   >
@@ -73,7 +73,7 @@ const LandingNavbar = () => {
                 </li>
                 {/* <li>
                   <a
-                    class="nav-link scrollto"
+                    className="nav-link scrollto"
                     onClick={HideNavbar}
                     href="#screenshots"
                   >
@@ -82,7 +82,7 @@ const LandingNavbar = () => {
                 </li> */}
                 <li>
                   <a
-                    class="nav-link scrollto"
+                    className="nav-link scrollto"
                     onClick={HideNavbar}
                     href="#contact"
                   >
@@ -91,7 +91,7 @@ const LandingNavbar = () => {
                 </li>
                 <li>
                   <Link
-                    class="getstarted scrollto"
+                    className="getstarted scrollto"
                     onClick={HideNavbar}
                     to="/login"
                   >
@@ -100,7 +100,7 @@ const LandingNavbar = () => {
                 </li>
               </ul>
               <i
-                class="bi bi-list mobile-nav-toggle"
+                className="bi bi-list mobile-nav-toggle"
                 id="mobileTogl"
                 onClick={MobileToggle}
               ></i>
