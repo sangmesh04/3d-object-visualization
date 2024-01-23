@@ -83,10 +83,7 @@ const AllAdminProducts = () => {
                       width: "100%",
                       backgroundColor: "#17171A!important",
                     }}
-                    // src={
-                    //   "D:/BE/BE Project/be-84-implementation/backend" +
-                    //   product.image
-                    // }
+                    src={product.image}
                     // ios-src={chairUsdz}
                     ar
                     alt="A 3D model of a chair"

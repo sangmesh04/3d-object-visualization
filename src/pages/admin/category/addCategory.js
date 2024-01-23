@@ -1,53 +1,70 @@
-import axios from "axios";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import axiosInstance from "../../../axios";
 
 const AddCategory = () => {
   const [isLoading, setLoading] = useState(false);
+  const [fileName, setFileName] = useState("");
   const [formValue, setFormValue] = useState({
     name: "",
     description: "",
     image: null,
   });
 
-  const addCategory = () => {
-    setLoading(true);
+  const handleAddCategory = async () => {
+    const load = toast.loading("loading...");
     if (formValue.name === "") {
+      toast.dismiss(load);
       toast.error("Enter category name!");
-      setLoading(false);
     } else if (formValue.description === "") {
+      toast.dismiss(load);
       toast.error("Enter category description!");
-      setLoading(false);
     } else if (formValue.image === null) {
+      toast.dismiss(load);
       toast.error("Kindly select a category image!");
-      setLoading(false);
     } else {
-      const formData = new FormData();
-      formData.append("image", formValue.image);
-      formData.append("name", formValue.name);
-      formData.append("description", formValue.description);
-      const config = {
-        headers: { "content-type": "multipart/form-data" },
-        withCredentials: true,
+      const s3Client = new S3Client({
+        region: "ap-south-1",
+        credentials: {
+          accessKeyId: "AKIASCFYJUKFJITHTOPE",
+          secretAccessKey: "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",
+        },
+      });
+      const keypath = `category/${
+        formValue.name + Date.now() + "-" + fileName
+      }`;
+      const params = {
+        Bucket: "3d-object-visualization",
+        Key: keypath,
+        Body: formValue.image,
       };
-      axios
-        .post(`http://localhost:8080/category/add`, formData, config)
-        .then((res) => {
-          // console.log("Second ", res.data);
-          setFormValue({
-            name: "",
-            description: "",
-            image: null,
+      const command = new PutObjectCommand(params);
+      const data = await s3Client.send(command);
+      if (data) {
+        const formData = {
+          ...formValue,
+          image: `https://3d-object-visualization.s3.ap-south-1.amazonaws.com/${keypath}`,
+        };
+        axiosInstance
+          .post("/category/add", { ...formData })
+          .then((res) => {
+            toast.dismiss(load);
+            toast.success("Category added successfully!");
+            setFormValue({
+              name: "",
+              description: "",
+              image: null,
+            });
+          })
+          .catch((err) => {
+            toast.dismiss(load);
+            toast.error("Something went wrong!");
           });
-          toast.success("Category added successfully!");
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log("Error while upload document.", err);
-          toast.error("Something went wrong!");
-          setLoading(false);
-        });
-      setLoading(false);
+      } else {
+        toast.dismiss(load);
+        toast.error("Unable to upload image!");
+      }
     }
   };
 
@@ -121,16 +138,17 @@ const AddCategory = () => {
                 name="searchText"
                 accept=".jpg, .png, .jpeg"
                 className="form-control"
-                onChange={(e) =>
-                  setFormValue({ ...formValue, image: e.target.files[0] })
-                }
+                onChange={(e) => {
+                  setFormValue({ ...formValue, image: e.target.files[0] });
+                  setFileName(e.target.files[0].name);
+                }}
                 id="cat-img"
               />
             </div>
             <div className="col-md-12">
               <button
                 className="btn btn-primary"
-                onClick={addCategory}
+                onClick={handleAddCategory}
                 style={{ float: "right" }}
               >
                 Add

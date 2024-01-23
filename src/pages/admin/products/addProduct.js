@@ -2,9 +2,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axiosInstance from "../../../axios";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 const AddProduct = () => {
   const [isLoading, setLoading] = useState(false);
+  const [fileName, setFileName] = useState("");
   const [formValue, setFormValue] = useState({
     name: "",
     description: "",
@@ -30,59 +32,71 @@ const AddProduct = () => {
       });
   }, []);
 
-  const handleAddProduct = () => {
-    setLoading(true);
+  const handleAddProduct = async () => {
+    const load = toast.loading("loading...");
     if (formValue.name === "") {
+      toast.dismiss(load);
       toast.error("Enter product name!");
-      setLoading(false);
     } else if (formValue.category === "") {
+      toast.dismiss(load);
       toast.error("Select a category!");
-      setLoading(false);
     } else if (formValue.description === "") {
+      toast.dismiss(load);
       toast.error("Enter product description!");
-      setLoading(false);
     } else if (formValue.price <= 0) {
+      toast.dismiss(load);
       toast.error("Enter valid price for the product!");
-      setLoading(false);
     } else if (formValue.quantity < 0) {
+      toast.dismiss(load);
       toast.error("Enter valid product quantity!");
-      setLoading(false);
     } else if (formValue.image === null) {
+      toast.dismiss(load);
       toast.error("Select a product 3d image (.glb format)!");
-      setLoading(false);
     } else {
-      const formData = new FormData();
-      formData.append("image", formValue.image);
-      formData.append("name", formValue.name);
-      formData.append("description", formValue.description);
-      formData.append("price", formValue.price);
-      formData.append("quantity", formValue.quantity);
-      formData.append("category", formValue.category);
-      const config = {
-        headers: { "content-type": "multipart/form-data" },
-        withCredentials: true,
+      const s3Client = new S3Client({
+        region: "ap-south-1",
+        credentials: {
+          accessKeyId: "AKIASCFYJUKFJITHTOPE",
+          secretAccessKey: "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",
+        },
+      });
+      const keypath = `products/${
+        formValue.name + Date.now() + "-" + fileName
+      }`;
+      const params = {
+        Bucket: "3d-object-visualization",
+        Key: keypath,
+        Body: formValue.image,
       };
-      axios
-        .post(`http://localhost:8080/product/add`, formData, config)
-        .then((res) => {
-          // console.log("Second ", res.data);
-          setFormValue({
-            name: "",
-            description: "",
-            image: null,
-            price: 0,
-            quantity: -1,
-            category: "",
+      const command = new PutObjectCommand(params);
+      const data = await s3Client.send(command);
+      if (data) {
+        const formData = {
+          ...formValue,
+          image: `https://3d-object-visualization.s3.ap-south-1.amazonaws.com/${keypath}`,
+        };
+        axiosInstance
+          .post("/product/add", { ...formData })
+          .then((res) => {
+            toast.dismiss(load);
+            toast.success("Product added successfully!");
+            setFormValue({
+              name: "",
+              description: "",
+              image: null,
+              price: 0,
+              quantity: -1,
+              category: "",
+            });
+          })
+          .catch((err) => {
+            toast.dismiss(load);
+            toast.error("Something went wrong!");
           });
-          toast.success("Product added successfully!");
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log("Error while upload document.", err);
-          toast.error("Something went wrong!");
-          setLoading(false);
-        });
-      setLoading(false);
+      } else {
+        toast.dismiss(load);
+        toast.error("Unable to upload image!");
+      }
     }
   };
 
@@ -204,9 +218,10 @@ const AddProduct = () => {
                 name="image"
                 accept=".glb, .usdz"
                 className="form-control"
-                onChange={(e) =>
-                  setFormValue({ ...formValue, image: e.target.files[0] })
-                }
+                onChange={(e) => {
+                  setFormValue({ ...formValue, image: e.target.files[0] });
+                  setFileName(e.target.files[0].name);
+                }}
                 id="cat-img"
               />
             </div>
