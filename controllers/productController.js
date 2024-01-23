@@ -19,9 +19,25 @@ module.exports.addProduct = async (req, res) => {
 
 module.exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate({ path: "category" });
+    const products = await Product.find({ isDeleted: false }).populate({
+      path: "category",
+    });
     res.status(200).json({ success: true, data: products });
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });
+  }
+};
+
+module.exports.deleteCProduct = async (req, res) => {
+  try {
+    const product = await Product.updateOne(
+      { _id: req.params.id },
+      { $set: { isDeleted: true } }
+    );
+    res
+      .status(200)
+      .json({ status: true, message: "Product deleted successfully!" });
+  } catch (err) {
+    res.status(400).json({ status: false, message: err });
   }
 };

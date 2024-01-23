@@ -11,9 +11,21 @@ router.get("/category", authAdmin, categoryController.getCategory);
 
 router.get("/categoryList", authAdmin, categoryController.getCategoryList);
 
+router.delete(
+  "/category/delete/:id",
+  authAdmin,
+  categoryController.deleteCategory
+);
+
 // product routes
 router.post("/product/add", authAdmin, productController.addProduct);
 
 router.get("/products", authAdmin, productController.getProducts);
+
+router.delete(
+  "/product/delete/:id",
+  authAdmin,
+  productController.deleteCProduct
+);
 
 module.exports = router;

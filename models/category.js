@@ -14,6 +14,10 @@ const categorySchema = new mongoose.Schema(
       type: String,
       required: [true, "Select category image!"],
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
