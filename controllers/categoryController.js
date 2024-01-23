@@ -2,6 +2,7 @@ const Category = require("../models/category");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs-extra");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
 let upload = multer({
   storage: multer.diskStorage({
@@ -27,38 +28,64 @@ let upload = multer({
 }).single("image");
 
 module.exports.addCategory = async (req, res) => {
-  upload(req, res, async () => {
-    try {
-      const category = await Category.create({
-        name: req.body.name,
-        description: req.body.description,
-        image: `./uploads/category/${req.filename}`,
-      });
-      // console.log(resume);
-      if (category) {
-        res.status(201).json({
-          success: true,
-          message: "Category added successfully!",
-        });
-      } else {
-        res
-          .status(400)
-          .json({ success: false, message: "Unable to add category!" });
-      }
-    } catch (err) {
-      res.status(400).json({ success: false, message: err.message });
-      // ** code for resume-upload using student authentication middleware
-      if (fs.existsSync(`./uploads/category/${req.filename}`)) {
-        fs.unlink(`./uploads/category/${req.filename}`);
-      }
-    }
+  const s3client = new S3Client({
+    region: "ap-south-1",
+    credentials: {
+      accessKeyId: "AKIASCFYJUKFJITHTOPE",
+      secretAccessKey: "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",
+    },
   });
+  const params = {
+    bucket: "3d-object-visualization",
+    key: "category",
+    body: req.body.image,
+  };
+  const command = new PutObjectCommand(params);
+
+  const data = await s3client.send(command);
+
+  console.log(data);
+  // upload(req, res, async () => {
+  //   try {
+  //     const category = await Category.create({
+  //       name: req.body.name,
+  //       description: req.body.description,
+  //       image: `./uploads/category/${req.filename}`,
+  //     });
+  //     // console.log(resume);
+  //     if (category) {
+  //       res.status(201).json({
+  //         success: true,
+  //         message: "Category added successfully!",
+  //       });
+  //     } else {
+  //       res
+  //         .status(400)
+  //         .json({ success: false, message: "Unable to add category!" });
+  //     }
+  //   } catch (err) {
+  //     res.status(400).json({ success: false, message: err.message });
+  //     // ** code for resume-upload using student authentication middleware
+  //     if (fs.existsSync(`./uploads/category/${req.filename}`)) {
+  //       fs.unlink(`./uploads/category/${req.filename}`);
+  //     }
+  //   }
+  // });
 };
 
 module.exports.getCategory = async (req, res) => {
   try {
     const category = await Category.find();
     res.status(200).json({ status: true, data: category });
+  } catch (err) {
+    res.status(400).json({ status: false, message: err });
+  }
+};
+
+module.exports.getCategoryList = async (req, res) => {
+  try {
+    const categoryList = await Category.find({}, { name: true, _id: true });
+    res.status(200).json({ status: true, data: categoryList });
   } catch (err) {
     res.status(400).json({ status: false, message: err });
   }
