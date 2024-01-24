@@ -7,7 +7,7 @@ const router = express.Router();
 // category routes
 router.post("/category/add", authAdmin, categoryController.addCategory);
 
-router.get("/category", authAdmin, categoryController.getCategory);
+router.get("/category", categoryController.getCategory); //public api
 
 router.get("/categoryList", authAdmin, categoryController.getCategoryList);
 
@@ -20,7 +20,7 @@ router.delete(
 // product routes
 router.post("/product/add", authAdmin, productController.addProduct);
 
-router.get("/products", authAdmin, productController.getProducts);
+router.get("/products", productController.getProducts); //public api
 
 router.delete(
   "/product/delete/:id",
