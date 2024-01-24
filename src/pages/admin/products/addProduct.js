@@ -56,8 +56,8 @@ const AddProduct = (props) => {
       const s3Client = new S3Client({
         region: "ap-south-1",
         credentials: {
-          accessKeyId: "AKIASCFYJUKFJITHTOPE",
-          secretAccessKey: "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",
+          accessKeyId: process.env.AWS_ACCESS_KEY,
+          secretAccessKey: process.env.AWS_SECRET_KEY,
         },
       });
       const keypath = `products/${

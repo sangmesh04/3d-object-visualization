@@ -1,9 +1,24 @@
-import { useState } from "react";
-import chair from "../../landing/assets/img/3d-models/Table.glb";
-import chairUsdz from "../../landing/assets/img/3d-models/chair.usdz";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const AllProducts = () => {
   const [productWish, setProductWish] = useState(false);
+  const [productList, setProductList] = useState([]);
+
+  useEffect(() => {
+    const load = toast.loading("loading...");
+    axios
+      .get("http://127.0.0.1:8080/products")
+      .then((res) => {
+        setProductList(res.data.data);
+        toast.dismiss(load);
+      })
+      .catch((err) => {
+        toast.dismiss(load);
+        toast.error("Something went wrong!");
+      });
+  }, []);
   return (
     <>
       <div className="hero">
@@ -49,7 +64,7 @@ const AllProducts = () => {
           </main>
           <div className="products">
             <div className="row">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((e) => (
+              {productList.map((product) => (
                 <div className="col-md-3" style={{ marginBottom: "12px" }}>
                   <div className="card">
                     <model-viewer
@@ -59,8 +74,8 @@ const AllProducts = () => {
                         width: "100%",
                         backgroundColor: "#17171A!important",
                       }}
-                      src={chair}
-                      ios-src={chairUsdz}
+                      src={product.image}
+                      // ios-src={chairUsdz}
                       ar
                       alt="A 3D model of a chair"
                       camera-orbit="-90deg"
@@ -79,8 +94,8 @@ const AllProducts = () => {
                           marginBottom: "0rem",
                         }}
                       >
-                        <span>Chair</span>
-                        <span>₹ 1456</span>
+                        <span>{product.name}</span>
+                        <span>₹ {product.price}</span>
                       </p>{" "}
                       <br />
                       <p
