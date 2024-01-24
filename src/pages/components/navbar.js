@@ -80,9 +80,9 @@ const Navbar = () => {
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
-                      Settings
-                    </a>
+                    <Link className="dropdown-item" to="/customer/wishlist">
+                      Wishlist
+                    </Link>
                   </li>
                   <li>
                     <Link className="dropdown-item" to="/customer/profile">

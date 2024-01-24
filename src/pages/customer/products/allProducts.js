@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import axiosInstance from "../../../axios";
 
 const AllProducts = () => {
-  const [productWish, setProductWish] = useState(false);
   const [productList, setProductList] = useState([]);
+  const [wishListProducts, setWishListProducts] = useState([]);
 
   useEffect(() => {
     const load = toast.loading("loading...");
@@ -19,6 +20,51 @@ const AllProducts = () => {
         toast.error("Something went wrong!");
       });
   }, []);
+
+  useEffect(() => {
+    const load = toast.loading("loading...");
+    axiosInstance
+      .get("/wishlist")
+      .then((res) => {
+        setWishListProducts(res.data.data);
+        toast.dismiss(load);
+      })
+      .catch((err) => {
+        toast.dismiss(load);
+        toast.error("Something went wrong!");
+      });
+  }, []);
+
+  const handleAddToWhishlist = (productId) => {
+    const load = toast.loading("loading...");
+    axiosInstance
+      .post("/wishlist/add", { productId })
+      .then((res) => {
+        toast.dismiss(load);
+        setWishListProducts(res.data.data);
+        toast.success("Added to wishlist!");
+      })
+      .catch((err) => {
+        toast.dismiss(load);
+        toast.error("Something went wrong!");
+      });
+  };
+
+  const handleRemoveFromWhishlist = (productId) => {
+    const load = toast.loading("loading...");
+    axiosInstance
+      .post("/wishlist/remove", { productId })
+      .then((res) => {
+        toast.dismiss(load);
+        setWishListProducts(res.data.data);
+        toast.success("Removed from wishlist!");
+      })
+      .catch((err) => {
+        toast.dismiss(load);
+        toast.error("Something went wrong!");
+      });
+  };
+
   return (
     <>
       <div className="hero">
@@ -107,19 +153,27 @@ const AllProducts = () => {
                         <a href="#">
                           <i className="bi bi-cart"></i> Add to cart
                         </a>
-                        <a
-                          onClick={() => setProductWish(!productWish)}
-                          title="Add to wishlist"
-                        >
-                          {productWish ? (
+
+                        {wishListProducts.includes(product._id) ? (
+                          <a
+                            onClick={() =>
+                              handleRemoveFromWhishlist(product._id)
+                            }
+                            title="Remove from wishlist"
+                          >
                             <i
                               className="bi bi-heart-fill"
                               style={{ color: "#dc3545" }}
                             ></i>
-                          ) : (
+                          </a>
+                        ) : (
+                          <a
+                            onClick={() => handleAddToWhishlist(product._id)}
+                            title="Add to wishlist"
+                          >
                             <i className="bi bi-heart"></i>
-                          )}
-                        </a>
+                          </a>
+                        )}
                       </p>
                     </div>
                   </div>
