@@ -104,3 +104,14 @@ module.exports.login = async (req, res) => {
     res.status(400).json({ success: false, error: err });
   }
 };
+
+module.exports.SignOut = async (req, res) => {
+  try {
+    req.user._id = "";
+    res.cookie("token", "", { maxAge: 1 });
+    res.cookie("usertype", "", { maxAge: 1 });
+    res.send({ success: true, message: "User logged out!" });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err });
+  }
+};

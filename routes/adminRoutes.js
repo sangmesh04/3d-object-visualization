@@ -1,5 +1,6 @@
 const express = require("express");
 const categoryController = require("../controllers/categoryController");
+const userController = require("../controllers/userController");
 const productController = require("../controllers/productController");
 const authAdmin = require("../middleware/authAdmin");
 const router = express.Router();
@@ -10,6 +11,8 @@ router.post("/category/add", authAdmin, categoryController.addCategory);
 router.get("/category", categoryController.getCategory); //public api
 
 router.get("/categoryList", authAdmin, categoryController.getCategoryList);
+
+router.get("/admin/signout", authAdmin, userController.SignOut);
 
 router.delete(
   "/category/delete/:id",
