@@ -1,6 +1,7 @@
 const express = require("express");
 const userController = require("../controllers/userController");
 const wishlistController = require("../controllers/wishlistController");
+const cartController = require("../controllers/cartController");
 const authUser = require("../middleware/authUser");
 const router = express.Router();
 
@@ -30,5 +31,14 @@ router.get(
   authUser,
   wishlistController.GetWishlistProductsDetails
 );
+
+//cart
+router.post("/cart/add", authUser, cartController.AddToCart);
+
+router.post("/cart/remove", authUser, cartController.RemoveFromCart);
+
+router.get("/cart", authUser, cartController.getCart);
+
+router.get("/cart/detail", authUser, cartController.GetCartDetails);
 
 module.exports = router;
