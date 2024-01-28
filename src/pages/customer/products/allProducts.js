@@ -6,6 +6,7 @@ import axiosInstance from "../../../axios";
 const AllProducts = () => {
   const [productList, setProductList] = useState([]);
   const [wishListProducts, setWishListProducts] = useState([]);
+  const [cartObj, setCartObj] = useState({});
 
   useEffect(() => {
     const load = toast.loading("loading...");
@@ -13,6 +14,24 @@ const AllProducts = () => {
       .get("http://127.0.0.1:8080/products")
       .then((res) => {
         setProductList(res.data.data);
+        toast.dismiss(load);
+      })
+      .catch((err) => {
+        toast.dismiss(load);
+        toast.error("Something went wrong!");
+      });
+  }, []);
+
+  useEffect(() => {
+    const load = toast.loading("loading...");
+    axiosInstance
+      .get("/cart")
+      .then((res) => {
+        var newobj = {};
+        res.data.data.map((prod) => {
+          newobj[prod.productId] = prod.count;
+        });
+        setCartObj(newobj);
         toast.dismiss(load);
       })
       .catch((err) => {
@@ -58,6 +77,46 @@ const AllProducts = () => {
         toast.dismiss(load);
         setWishListProducts(res.data.data);
         toast.success("Removed from wishlist!");
+      })
+      .catch((err) => {
+        toast.dismiss(load);
+        toast.error("Something went wrong!");
+      });
+  };
+
+  const handleAddToCart = (productId, count) => {
+    const load = toast.loading("loading...");
+    const cart = { productId, count };
+    axiosInstance
+      .post("/cart/add", { cart })
+      .then((res) => {
+        toast.dismiss(load);
+        var newobj = {};
+        res.data.data.map((prod) => {
+          newobj[prod.productId] = prod.count;
+        });
+        setCartObj(newobj);
+        toast.success("Product added to cart!");
+      })
+      .catch((err) => {
+        toast.dismiss(load);
+        toast.error("Something went wrong!");
+      });
+  };
+
+  const handleRemoveFromCart = (productId) => {
+    const load = toast.loading("loading...");
+    const cart = { productId };
+    axiosInstance
+      .post("/cart/remove", { cart })
+      .then((res) => {
+        toast.dismiss(load);
+        var newobj = {};
+        res.data.data.map((prod) => {
+          newobj[prod.productId] = prod.count;
+        });
+        setCartObj(newobj);
+        toast.success("Product removed from cart!");
       })
       .catch((err) => {
         toast.dismiss(load);
@@ -150,10 +209,39 @@ const AllProducts = () => {
                           justifyContent: "space-between",
                         }}
                       >
-                        <a href="#">
-                          <i className="bi bi-cart"></i> Add to cart
-                        </a>
-
+                        <p>
+                          {cartObj[product._id] ? (
+                            <>
+                              <a
+                                href="#"
+                                onClick={() =>
+                                  handleRemoveFromCart(product._id)
+                                }
+                              >
+                                <i className="bi bi-dash"></i>
+                              </a>{" "}
+                              {cartObj[product._id]}{" "}
+                              <a
+                                href="#"
+                                onClick={() =>
+                                  handleAddToCart(
+                                    product._id,
+                                    1 + cartObj[product._id]
+                                  )
+                                }
+                              >
+                                <i className="bi bi-plus"></i>
+                              </a>
+                            </>
+                          ) : (
+                            <a
+                              href="#"
+                              onClick={() => handleAddToCart(product._id, 1)}
+                            >
+                              <i className="bi bi-cart"></i> Add to cart{" "}
+                            </a>
+                          )}
+                        </p>
                         {wishListProducts.includes(product._id) ? (
                           <a
                             onClick={() =>

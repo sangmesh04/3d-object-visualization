@@ -11,6 +11,7 @@ import AdminDashboard from "./pages/admin/adminDashboard";
 import AllCategory from "./pages/admin/category/allCategory";
 import AllAdminProducts from "./pages/admin/products/allProducts";
 import Wishlist from "./pages/customer/wishlist";
+import Cart from "./pages/customer/cart";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="profile" element={<CustomerProfile />} />
             <Route path="products" element={<AllProducts />} />
             <Route path="wishlist" element={<Wishlist />} />
+            <Route path="cart" element={<Cart />} />
           </Route>
         </Route>
 

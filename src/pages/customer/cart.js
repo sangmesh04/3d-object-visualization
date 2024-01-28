@@ -2,18 +2,20 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axiosInstance from "../../axios";
 
-const Wishlist = () => {
+const Cart = () => {
   const [productList, setProductList] = useState([]);
   const [wishListProducts, setWishListProducts] = useState([]);
   const [update, setUpdate] = useState(false);
-  const [cartObj, setCartObj] = useState({});
 
   useEffect(() => {
     const load = toast.loading("loading...");
     axiosInstance
-      .get("/wishlist/detail")
+      .get("/cart/detail")
       .then((res) => {
-        setProductList(res.data.data);
+        // console.log(res.data.data);
+        if (res.data.data?.cart) {
+          setProductList(res.data.data.cart);
+        }
         toast.dismiss(load);
       })
       .catch((err) => {
@@ -21,24 +23,6 @@ const Wishlist = () => {
         toast.error("Something went wrong!");
       });
   }, [update]);
-
-  useEffect(() => {
-    const load = toast.loading("loading...");
-    axiosInstance
-      .get("/cart")
-      .then((res) => {
-        var newobj = {};
-        res.data.data.map((prod) => {
-          newobj[prod.productId] = prod.count;
-        });
-        setCartObj(newobj);
-        toast.dismiss(load);
-      })
-      .catch((err) => {
-        toast.dismiss(load);
-        toast.error("Something went wrong!");
-      });
-  }, []);
 
   useEffect(() => {
     const load = toast.loading("loading...");
@@ -61,7 +45,6 @@ const Wishlist = () => {
       .then((res) => {
         toast.dismiss(load);
         setWishListProducts(res.data.data);
-        setUpdate(!update);
         toast.success("Added to wishlist!");
       })
       .catch((err) => {
@@ -77,7 +60,6 @@ const Wishlist = () => {
       .then((res) => {
         toast.dismiss(load);
         setWishListProducts(res.data.data);
-        setUpdate(!update);
         toast.success("Removed from wishlist!");
       })
       .catch((err) => {
@@ -93,11 +75,7 @@ const Wishlist = () => {
       .post("/cart/add", { cart })
       .then((res) => {
         toast.dismiss(load);
-        var newobj = {};
-        res.data.data.map((prod) => {
-          newobj[prod.productId] = prod.count;
-        });
-        setCartObj(newobj);
+        setUpdate(!update);
         toast.success("Product added to cart!");
       })
       .catch((err) => {
@@ -113,11 +91,7 @@ const Wishlist = () => {
       .post("/cart/remove", { cart })
       .then((res) => {
         toast.dismiss(load);
-        var newobj = {};
-        res.data.data.map((prod) => {
-          newobj[prod.productId] = prod.count;
-        });
-        setCartObj(newobj);
+        setUpdate(!update);
         toast.success("Product removed from cart!");
       })
       .catch((err) => {
@@ -129,7 +103,7 @@ const Wishlist = () => {
   return (
     <>
       <div className="hero">
-        <h1>Wishlist</h1>
+        <h1>Cart</h1>
         <div id="ProfileContainer">
           <div className="products">
             <div className="row">
@@ -144,7 +118,7 @@ const Wishlist = () => {
                           width: "100%",
                           backgroundColor: "#17171A!important",
                         }}
-                        src={product.image}
+                        src={product.productId.image}
                         // ios-src={chairUsdz}
                         ar
                         alt="A 3D model of a chair"
@@ -164,8 +138,8 @@ const Wishlist = () => {
                             marginBottom: "0rem",
                           }}
                         >
-                          <span>{product.name}</span>
-                          <span>₹ {product.price}</span>
+                          <span>{product.productId.name}</span>
+                          <span>₹ {product.productId.price}</span>
                         </p>{" "}
                         <br />
                         <p
@@ -175,23 +149,23 @@ const Wishlist = () => {
                           }}
                         >
                           <p>
-                            {cartObj[product._id] ? (
+                            {product.count ? (
                               <>
                                 <a
                                   href="#"
                                   onClick={() =>
-                                    handleRemoveFromCart(product._id)
+                                    handleRemoveFromCart(product.productId._id)
                                   }
                                 >
                                   <i className="bi bi-dash"></i>
                                 </a>{" "}
-                                {cartObj[product._id]}{" "}
+                                {product.count}{" "}
                                 <a
                                   href="#"
                                   onClick={() =>
                                     handleAddToCart(
-                                      product._id,
-                                      1 + cartObj[product._id]
+                                      product.productId._id,
+                                      1 + product.count
                                     )
                                   }
                                 >
@@ -201,17 +175,19 @@ const Wishlist = () => {
                             ) : (
                               <a
                                 href="#"
-                                onClick={() => handleAddToCart(product._id, 1)}
+                                onClick={() =>
+                                  handleAddToCart(product.productId._id, 1)
+                                }
                               >
                                 <i className="bi bi-cart"></i> Add to cart{" "}
                               </a>
                             )}
                           </p>
 
-                          {wishListProducts.includes(product._id) ? (
+                          {wishListProducts.includes(product.productId._id) ? (
                             <a
                               onClick={() =>
-                                handleRemoveFromWhishlist(product._id)
+                                handleRemoveFromWhishlist(product.productId._id)
                               }
                               title="Remove from wishlist"
                             >
@@ -222,7 +198,9 @@ const Wishlist = () => {
                             </a>
                           ) : (
                             <a
-                              onClick={() => handleAddToWhishlist(product._id)}
+                              onClick={() =>
+                                handleAddToWhishlist(product.productId._id)
+                              }
                               title="Add to wishlist"
                             >
                               <i className="bi bi-heart"></i>
@@ -234,7 +212,7 @@ const Wishlist = () => {
                   </div>
                 ))
               ) : (
-                <p>No products in wishlist!</p>
+                <p>No products in the cart!</p>
               )}
             </div>
           </div>
@@ -268,4 +246,4 @@ const Wishlist = () => {
   );
 };
 
-export default Wishlist;
+export default Cart;

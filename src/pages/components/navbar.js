@@ -1,7 +1,27 @@
-import { Link, Outlet } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import axiosInstance from "../../axios";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
+  const [cookie, setCookie] = useCookies(["usertype", "token1"]);
+
+  const handleSignOut = (user) => {
+    axiosInstance
+      .get(`/${user}/signout`)
+      .then((res) => {
+        // console.log("Student Logout");
+        setCookie("token1", "", { path: "/" });
+        setCookie("username", "", { path: "/" });
+        toast.success("User signed out successfully!");
+        navigate("/");
+      })
+      .catch((err) => {
+        // console.log("Error ",err);
+      });
+  };
   return (
     <>
       <header className="p-3 border-bottom customerNavbar">
@@ -70,9 +90,9 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <Link className="dropdown-item" to="/customer/cart">
                       Cart
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a className="dropdown-item" href="#">
@@ -93,7 +113,12 @@ const Navbar = () => {
                     <hr className="dropdown-divider" />
                   </li>
                   <li>
-                    <a className="dropdown-item" id="signout" href="#">
+                    <a
+                      className="dropdown-item"
+                      id="signout"
+                      onClick={() => handleSignOut("user")}
+                      href="#"
+                    >
                       Sign out
                     </a>
                   </li>
@@ -124,7 +149,12 @@ const Navbar = () => {
                     <hr className="dropdown-divider" />
                   </li>
                   <li>
-                    <a className="dropdown-item" id="signout" href="#">
+                    <a
+                      className="dropdown-item"
+                      id="signout"
+                      onClick={() => handleSignOut("admin")}
+                      href="#"
+                    >
                       Sign out
                     </a>
                   </li>
