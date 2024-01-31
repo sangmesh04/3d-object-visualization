@@ -82,11 +82,11 @@ module.exports.login = async (req, res) => {
       bcrypt.compare(password, user.password).then((rest) => {
         if (rest) {
           const token = createToken(user._id);
-          res.cookie("token", token, {
-            httpOnly: true,
-            maxAge: maxAge * 1000, // 3 days
-          });
           res
+            .cookie("token", token, {
+              httpOnly: true,
+              maxAge: maxAge * 1000, // 3 days
+            })
             .status(200)
             .json({ user, usertype: user.role, token, success: true });
         } else {

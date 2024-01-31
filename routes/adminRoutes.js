@@ -25,6 +25,8 @@ router.post("/product/add", authAdmin, productController.addProduct);
 
 router.get("/products", productController.getProducts); //public api
 
+router.get("/product/:productId", productController.getAproduct); //public api
+
 router.delete(
   "/product/delete/:id",
   authAdmin,

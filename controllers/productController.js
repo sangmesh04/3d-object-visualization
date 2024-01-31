@@ -28,6 +28,15 @@ module.exports.getProducts = async (req, res) => {
   }
 };
 
+module.exports.getAproduct = async (req, res) => {
+  try {
+    const product = await Product.findOne({ _id: req.params.productId });
+    res.status(200).json({ success: true, data: product });
+  } catch (err) {
+    res.status(400).json({ status: false, message: err });
+  }
+};
+
 module.exports.deleteCProduct = async (req, res) => {
   try {
     const product = await Product.updateOne(
