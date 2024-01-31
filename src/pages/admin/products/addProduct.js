@@ -56,8 +56,8 @@ const AddProduct = (props) => {
       const s3Client = new S3Client({
         region: "ap-south-1",
         credentials: {
-          accessKeyId: process.env.AWS_ACCESS_KEY,
-          secretAccessKey: process.env.AWS_SECRET_KEY,
+          accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
+          secretAccessKey: process.env.REACT_APP_AWS_SECRET_KEY,
         },
       });
       const keypath = `products/${
@@ -231,6 +231,8 @@ const AddProduct = (props) => {
                 className="btn btn-primary"
                 onClick={handleAddProduct}
                 style={{ float: "right" }}
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"
               >
                 Add
               </button>

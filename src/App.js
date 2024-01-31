@@ -12,6 +12,8 @@ import AllCategory from "./pages/admin/category/allCategory";
 import AllAdminProducts from "./pages/admin/products/allProducts";
 import Wishlist from "./pages/customer/wishlist";
 import Cart from "./pages/customer/cart";
+import CheckOut from "./pages/customer/checkout";
+import Product from "./pages/customer/product";
 
 function App() {
   return (
@@ -27,8 +29,10 @@ function App() {
             <Route path="dashboard" element={<CustomerDashboard />} />
             <Route path="profile" element={<CustomerProfile />} />
             <Route path="products" element={<AllProducts />} />
+            <Route path="product/:productId" element={<Product />} />
             <Route path="wishlist" element={<Wishlist />} />
             <Route path="cart" element={<Cart />} />
+            <Route path="checkout" element={<CheckOut />}></Route>
           </Route>
         </Route>
 

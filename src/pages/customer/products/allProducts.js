@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import axiosInstance from "../../../axios";
+import { Link } from "react-router-dom";
 
 const AllProducts = () => {
   const [productList, setProductList] = useState([]);
@@ -199,7 +200,11 @@ const AllProducts = () => {
                           marginBottom: "0rem",
                         }}
                       >
-                        <span>{product.name}</span>
+                        <span>
+                          <Link to={`/customer/product/${product._id}`}>
+                            {product.name}
+                          </Link>
+                        </span>
                         <span>₹ {product.price}</span>
                       </p>{" "}
                       <br />

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../../../axios";
 import toast from "react-hot-toast";
 import AddProduct from "./addProduct";
+import axios from "axios";
 
 const AllAdminProducts = () => {
   const [isLoading, setLoading] = useState(false);
@@ -10,8 +11,8 @@ const AllAdminProducts = () => {
 
   useEffect(() => {
     setLoading(true);
-    axiosInstance
-      .get("/products/")
+    axios
+      .get("http://localhost:8080/products/")
       .then((res) => {
         setProductData(res.data.data);
         setLoading(false);

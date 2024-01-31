@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axiosInstance from "../../axios";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const [productList, setProductList] = useState([]);
@@ -138,7 +139,13 @@ const Cart = () => {
                             marginBottom: "0rem",
                           }}
                         >
-                          <span>{product.productId.name}</span>
+                          <span>
+                            <Link
+                              to={`/customer/product/${product.productId._id}`}
+                            >
+                              {product.productId.name}
+                            </Link>
+                          </span>
                           <span>₹ {product.productId.price}</span>
                         </p>{" "}
                         <br />
@@ -218,6 +225,12 @@ const Cart = () => {
           </div>
         </div>
 
+        <div className="proceedToCheckout">
+          <Link to="/customer/checkout" className="linkm">
+            {" "}
+            Proceed to checkout! <i class="bi bi-cart"></i>
+          </Link>
+        </div>
         {/* filter offcanvas */}
         <div
           className="offcanvas offcanvas-start"

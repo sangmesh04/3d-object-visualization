@@ -76,12 +76,12 @@
   }
 
   /* navbar styles  */
-  .customerNavbar a, .products a, .categories a{
+  .customerNavbar a, .products a, .categories a, .prodctDetails a{
     text-decoration: none;
     color: #343a40;
   }
 
-  .customerNavbar a:hover{
+  .customerNavbar a:hover .prodctDetails a:hover{
     color: #343a40;
   }
   #signout:hover{
@@ -96,4 +96,23 @@
 
   .products, .categories{
     padding: 30px;
+  }
+
+  .linkm{
+    text-decoration: none;
+    color: #e4f1ff;
+  }
+
+  .linkm:hover{
+    color: #c8e0fa;
+  }
+
+  .proceedToCheckout{
+    text-decoration: none;
+    color: #343a40;
+    padding: 25px;
+    position: fixed;
+    bottom: 0;
+    background-color: #012970;
+    width: 100%;
   }
