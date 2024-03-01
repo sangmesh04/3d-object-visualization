@@ -2,6 +2,7 @@ const express = require("express");
 const categoryController = require("../controllers/categoryController");
 const userController = require("../controllers/userController");
 const productController = require("../controllers/productController");
+const orderController = require("../controllers/orderController");
 const authAdmin = require("../middleware/authAdmin");
 const router = express.Router();
 
@@ -33,4 +34,6 @@ router.delete(
   productController.deleteCProduct
 );
 
+// orders routes
+router.get("/orders", authAdmin, orderController.getAllOrders);
 module.exports = router;

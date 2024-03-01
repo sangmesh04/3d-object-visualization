@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
@@ -17,7 +18,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://127.0.0.1:3000",
-      "http://192.168.0.109:3000",
+      "http://192.168.0.107:3000",
     ],
     credentials: true,
   })
@@ -38,5 +39,6 @@ mongoose
     console.log(err);
   });
 
+app.use("/api-payment/", paymentRoutes);
 app.use(userRoutes);
 app.use(adminRoutes);

@@ -2,6 +2,7 @@ const express = require("express");
 const userController = require("../controllers/userController");
 const wishlistController = require("../controllers/wishlistController");
 const cartController = require("../controllers/cartController");
+const orderController = require("../controllers/orderController");
 const authUser = require("../middleware/authUser");
 const router = express.Router();
 
@@ -40,5 +41,10 @@ router.post("/cart/remove", authUser, cartController.RemoveFromCart);
 router.get("/cart", authUser, cartController.getCart);
 
 router.get("/cart/detail", authUser, cartController.GetCartDetails);
+
+//order
+router.post("/user/order/place", authUser, orderController.placeOrder);
+
+router.get("/user/orders", authUser, orderController.getOrders);
 
 module.exports = router;

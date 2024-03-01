@@ -55,16 +55,33 @@ module.exports.getProfile = async (req, res) => {
 
 module.exports.profileUpdate = async (req, res) => {
   try {
+    const userd = await User.findOne({ _id: req.user._id });
     const updatedUser = req.body.user;
     const address = req.body.address;
-    const newaddress = await Address.updateOne(
-      { _id: updatedUser.address },
-      { $set: { ...address }, options: { upsert: true } }
-    );
-    const user = await User.updateOne(
-      { _id: req.user._id },
-      { $set: { ...updatedUser, address: newaddress._id } }
-    );
+    if (userd.isAddressFilled) {
+      await Address.updateOne({ _id: userd.address }, { $set: { ...address } });
+      const user = await User.updateOne(
+        { _id: req.user._id },
+        {
+          $set: {
+            ...updatedUser,
+            isAddressFilled: true,
+          },
+        }
+      );
+    } else {
+      const newaddress = await Address.create({ ...address });
+      const user = await User.updateOne(
+        { _id: req.user._id },
+        {
+          $set: {
+            ...updatedUser,
+            address: newaddress._id,
+            isAddressFilled: true,
+          },
+        }
+      );
+    }
     res
       .status(200)
       .json({ status: true, message: "User data updated successfully!" });
