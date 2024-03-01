@@ -2,7 +2,7 @@
   "name": "3d-object-visualization",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8080",
+  "proxy": "http://192.168.0.102:8080",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.496.0",
     "@testing-library/jest-dom": "^5.17.0",

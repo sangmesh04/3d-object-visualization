@@ -39,8 +39,8 @@ const LoginForm = () => {
     else {
       setLoading(true);
       axios
-        // .post("http://localhost:8080/user/login"
-        .post("http://localhost:8080/user/login", formValue, {
+        // .post("http://192.168.0.102:8080/user/login"
+        .post("http://192.168.0.102:8080/user/login", formValue, {
           withCredentials: true,
         })
         .then((res) => {
