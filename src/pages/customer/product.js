@@ -147,6 +147,7 @@ const Product = () => {
                 auto-rotate=""
                 camera-controls=""
                 background-color="#455A64"
+                tone-mapping="commerce"
               ></model-viewer>
             </div>
             <div
@@ -156,6 +157,9 @@ const Product = () => {
               <h2>{product.name}</h2>
               <br />
               <i>{product.description}</i> <br /> <br />
+              <b>
+                <p>₹ {product.price}</p>
+              </b>
               <p
                 style={{
                   display: "flex",

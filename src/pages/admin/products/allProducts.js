@@ -12,6 +12,7 @@ const AllAdminProducts = () => {
   useEffect(() => {
     setLoading(true);
     axios
+      // .get("http://localhost:8080/products/")
       .get("http://localhost:8080/products/")
       .then((res) => {
         setProductData(res.data.data);

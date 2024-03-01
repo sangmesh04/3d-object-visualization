@@ -12,7 +12,8 @@ const AllProducts = () => {
   useEffect(() => {
     const load = toast.loading("loading...");
     axios
-      .get("http://127.0.0.1:8080/products")
+      // .get("http://127.0.0.1:8080/products")
+      .get("http://localhost:8080/products")
       .then((res) => {
         setProductList(res.data.data);
         toast.dismiss(load);

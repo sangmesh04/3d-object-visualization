@@ -224,13 +224,16 @@ const Cart = () => {
             </div>
           </div>
         </div>
-
-        <div className="proceedToCheckout">
-          <Link to="/customer/checkout" className="linkm">
-            {" "}
-            Proceed to checkout! <i class="bi bi-cart"></i>
-          </Link>
-        </div>
+        {productList.length > 0 ? (
+          <div className="proceedToCheckout">
+            <Link to="/customer/checkout" className="linkm">
+              {" "}
+              Proceed to checkout! <i class="bi bi-cart"></i>
+            </Link>
+          </div>
+        ) : (
+          ""
+        )}
         {/* filter offcanvas */}
         <div
           className="offcanvas offcanvas-start"

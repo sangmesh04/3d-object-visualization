@@ -14,6 +14,8 @@ import Wishlist from "./pages/customer/wishlist";
 import Cart from "./pages/customer/cart";
 import CheckOut from "./pages/customer/checkout";
 import Product from "./pages/customer/product";
+import Orders from "./pages/customer/orders";
+import AdminOrders from "./pages/admin/orders";
 
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
             <Route path="wishlist" element={<Wishlist />} />
             <Route path="cart" element={<Cart />} />
             <Route path="checkout" element={<CheckOut />}></Route>
+            <Route path="orders" element={<Orders />}></Route>
           </Route>
         </Route>
 
@@ -42,6 +45,7 @@ function App() {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="category" element={<AllCategory />} />
             <Route path="products" element={<AllAdminProducts />} />
+            <Route path="orders" element={<AdminOrders />} />
           </Route>
         </Route>
       </Routes>

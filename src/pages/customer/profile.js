@@ -108,7 +108,9 @@ const CustomerProfile = () => {
       .get("/user/profile")
       .then((res) => {
         setformValue(res.data.user);
-        setAddress(res.data.user.address);
+        if (res.data.user.isAddressFilled) {
+          setAddress(res.data.user.address);
+        }
         setLoading(false);
       })
       .catch((err) => {

@@ -95,9 +95,9 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <Link className="dropdown-item" to="/customer/orders">
                       Orders
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <Link className="dropdown-item" to="/customer/wishlist">
@@ -136,9 +136,9 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <Link className="dropdown-item" to="/admin/orders">
                       Orders
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a className="dropdown-item" href="#">
