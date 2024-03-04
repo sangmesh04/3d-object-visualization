@@ -116,3 +116,23 @@
     background-color: #012970;
     width: 100%;
   }
+
+
+.deliveryPending{
+    background-color: #feffa66c;
+    backdrop-filter: blur(18px);
+}
+
+.deliverySuccess{
+  background-color: rgba(185, 255, 185, 0.637);
+  backdrop-filter: blur(18px);
+}
+
+a .productDataLink{
+  text-decoration: underline;
+  color: #2776ff;
+}
+
+a .productDataLink:hover{
+  color: #012970;
+}

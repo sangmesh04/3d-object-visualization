@@ -16,6 +16,7 @@ import CheckOut from "./pages/customer/checkout";
 import Product from "./pages/customer/product";
 import Orders from "./pages/customer/orders";
 import AdminOrders from "./pages/admin/orders";
+import AdminProduct from "./pages/admin/product";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="category" element={<AllCategory />} />
             <Route path="products" element={<AllAdminProducts />} />
+            <Route path="product/:productId" element={<AdminProduct />} />
             <Route path="orders" element={<AdminOrders />} />
           </Route>
         </Route>

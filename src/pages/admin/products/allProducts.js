@@ -3,6 +3,7 @@ import axiosInstance from "../../../axios";
 import toast from "react-hot-toast";
 import AddProduct from "./addProduct";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const AllAdminProducts = () => {
   const [isLoading, setLoading] = useState(false);
@@ -127,7 +128,9 @@ const AllAdminProducts = () => {
                         marginBottom: "0rem",
                       }}
                     >
-                      <span>{product.name}</span>
+                      <Link to={`/admin/product/${product._id}`}>
+                        <span>{product.name}</span>
+                      </Link>
                       <span>₹ {product.price}</span>
                     </p>{" "}
                     <br />
@@ -138,7 +141,7 @@ const AllAdminProducts = () => {
                       }}
                     >
                       <a href="#">
-                        <i className="bi bi-cart"></i> Add to cart
+                        {/* <i className="bi bi-cart"></i> Add to cart */}
                       </a>
                       <a
                         href="#"
