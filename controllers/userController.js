@@ -53,6 +53,25 @@ module.exports.getProfile = async (req, res) => {
   }
 };
 
+module.exports.getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).populate({
+      path: "address",
+    });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found!", status: false });
+    }
+    var userData = JSON.parse(JSON.stringify(user));
+    delete userData["password"];
+    res.status(200).json({ user: userData, status: true });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ message: err });
+  }
+};
+
 module.exports.profileUpdate = async (req, res) => {
   try {
     const userd = await User.findOne({ _id: req.user._id });

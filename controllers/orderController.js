@@ -36,10 +36,27 @@ module.exports.getOrders = async (req, res) => {
 
 module.exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find()
-      .populate({ path: "cart.productId" })
-      .populate({ path: "userId" });
+    const orders = await Order.find().populate({ path: "cart.productId" });
     res.status(200).json({ status: true, message: "Orders fetched!", orders });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ status: false, message: err });
+  }
+};
+
+module.exports.updateDeliveryStatus = async (req, res) => {
+  try {
+    const order = await Order.updateOne(
+      { _id: req.body.orderId },
+      { deliveryStatus: req.body.deliveryStatus }
+    );
+    if (order) {
+      res
+        .status(200)
+        .json({ status: true, message: "Delivery status updated!" });
+    } else {
+      res.status(400).json({ status: false, message: "Something went wrong!" });
+    }
   } catch (err) {
     console.log(err);
     res.status(400).json({ status: false, message: err });

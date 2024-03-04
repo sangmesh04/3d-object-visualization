@@ -4,6 +4,7 @@ const wishlistController = require("../controllers/wishlistController");
 const cartController = require("../controllers/cartController");
 const orderController = require("../controllers/orderController");
 const authUser = require("../middleware/authUser");
+const authAdmin = require("../middleware/authAdmin");
 const router = express.Router();
 
 router.post("/user/signup", userController.signup);
@@ -13,6 +14,8 @@ router.get("/user/signout", authUser, userController.SignOut);
 router.post("/user/login", userController.login);
 
 router.get("/user/profile", authUser, userController.getProfile);
+
+router.get("/user/profile/:userId", authAdmin, userController.getUserProfile);
 
 router.post("/user/profile/update", authUser, userController.profileUpdate);
 

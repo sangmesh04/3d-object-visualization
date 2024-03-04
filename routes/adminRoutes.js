@@ -36,4 +36,11 @@ router.delete(
 
 // orders routes
 router.get("/orders", authAdmin, orderController.getAllOrders);
+
+router.post(
+  "/order/deliveryStatusUpdate",
+  authAdmin,
+  orderController.updateDeliveryStatus
+);
+
 module.exports = router;
