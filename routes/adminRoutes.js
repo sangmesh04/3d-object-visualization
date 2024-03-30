@@ -34,6 +34,8 @@ router.delete(
   productController.deleteCProduct
 );
 
+router.put("/product/:id", authAdmin, productController.updateProduct);
+
 // orders routes
 router.get("/orders", authAdmin, orderController.getAllOrders);
 

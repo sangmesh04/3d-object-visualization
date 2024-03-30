@@ -50,3 +50,22 @@ module.exports.deleteCProduct = async (req, res) => {
     res.status(400).json({ status: false, message: err });
   }
 };
+
+module.exports.updateProduct = async (req, res) => {
+  try {
+    const newdata = req.body;
+    const product = await Product.updateOne(
+      { _id: req.params.id },
+      { $set: { ...newdata } }
+    );
+    res
+      .status(200)
+      .json({
+        status: true,
+        product,
+        message: "Product deleted successfully!",
+      });
+  } catch (err) {
+    res.status(400).json({ status: false, message: err });
+  }
+};
