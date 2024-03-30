@@ -199,7 +199,7 @@ const AdminOrders = () => {
                             <td>{product.count}</td>
                             <td>
                               <Link
-                                to={`/customer/product/${product.productId._id}`}
+                                to={`/admin/product/${product.productId._id}`}
                               >
                                 {product.productId.name}
                               </Link>

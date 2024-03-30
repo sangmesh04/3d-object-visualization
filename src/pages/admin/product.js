@@ -7,9 +7,6 @@ import "../customer/products/product.css";
 const AdminProduct = () => {
   const params = useParams();
   const [product, setProduct] = useState({});
-  const [cart, setCart] = useState([]);
-  const [cartObj, setCartObj] = useState({});
-  const [wishListProducts, setWishListProducts] = useState([]);
   const [showDimension, setShowDimension] = useState(true);
 
   useEffect(() => {
@@ -25,6 +22,51 @@ const AdminProduct = () => {
         toast.error("Something went wrong!");
       });
   }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProduct({ ...product, [name]: value });
+  };
+
+  const handleDeleteProduct = (id) => {
+    const load = toast.loading("loading...");
+    var confirm = prompt("Enter 'confirm' to delete!");
+    if (confirm === "confirm") {
+      axiosInstance
+        .delete(`/product/delete/${id}`)
+        .then((res) => {
+          toast.dismiss(load);
+          toast.success("Product deleted successfully!");
+        })
+        .catch((err) => {
+          toast.dismiss(load);
+          toast.error("Something went wrong");
+        });
+    } else {
+      toast.dismiss(load);
+      toast.error("Delete operation cancelled!");
+    }
+  };
+
+  const updateProductDetails = (productId) => {
+    const load = toast.loading("loading...");
+    var confirm = prompt("Enter 'confirm' to update!");
+    if (confirm === "confirm") {
+      axiosInstance
+        .put(`/product/${productId}`, { ...product })
+        .then((res) => {
+          toast.dismiss(load);
+          toast.success("Product updated successfully!");
+        })
+        .catch((err) => {
+          toast.dismiss(load);
+          toast.error("Something went wrong");
+        });
+    } else {
+      toast.dismiss(load);
+      toast.error("Update operation cancelled!");
+    }
+  };
 
   const modelViewer = document.querySelector("#dimension-demo");
 
@@ -357,21 +399,68 @@ const AdminProduct = () => {
                 paddingLeft: "32px",
               }}
             >
-              <h2>{product.name}</h2>
+              <h2>
+                <input
+                  type="text"
+                  style={{ width: "30rem" }}
+                  value={product.name}
+                  onChange={handleInputChange}
+                  name="name"
+                />
+              </h2>
               <br />
-              <i>{product.description}</i> <br /> <br />
+              <i>
+                {" "}
+                <textarea
+                  value={product.description}
+                  cols="50"
+                  rows="10"
+                  onChange={handleInputChange}
+                  name="description"
+                ></textarea>
+              </i>{" "}
+              <br /> <br />
               <b>
-                <p>₹ {product.price}</p>
+                <p>
+                  ₹{" "}
+                  <input
+                    type="number"
+                    name="price"
+                    onChange={handleInputChange}
+                    value={product.price}
+                  />
+                </p>
               </b>
+              <p>
+                Quantity:{" "}
+                <input
+                  type="number"
+                  name="quantity"
+                  onChange={handleInputChange}
+                  value={product.quantity}
+                />
+              </p>
               <p
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
-                  padding: "18px",
                 }}
               >
-                <p>{cartObj[product._id]}</p>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => updateProductDetails(product._id)}
+                >
+                  Update
+                </button>
+                <a
+                  href="#"
+                  onClick={() => handleDeleteProduct(product._id)}
+                  className="deleteItem"
+                >
+                  <i className="bi bi-trash3"></i> Delete
+                </a>
               </p>
+              <br />
               <div class="form-check form-switch">
                 <input
                   class="form-check-input"

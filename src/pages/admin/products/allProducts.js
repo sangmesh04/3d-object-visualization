@@ -13,8 +13,8 @@ const AllAdminProducts = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      // .get("http://192.168.0.102:8080/products/")
-      .get("http://192.168.0.102:8080/products/")
+      // .get("http://192.168.0.112:8080/products/")
+      .get("http://192.168.0.112:8080/products/")
       .then((res) => {
         setProductData(res.data.data);
         setLoading(false);
@@ -98,63 +98,65 @@ const AllAdminProducts = () => {
         </main>
         <div className="categories">
           <div className="row">
-            {productData.map((product) => (
-              <div className="col-md-3" style={{ marginBottom: "12px" }}>
-                <div className="card">
-                  <model-viewer
-                    className="viewer card-img-top"
-                    style={{
-                      height: "250px",
-                      width: "100%",
-                      backgroundColor: "#17171A!important",
-                    }}
-                    src={product.image}
-                    // ios-src={chairUsdz}
-                    ar
-                    alt="A 3D model of a chair"
-                    camera-orbit="-90deg"
-                    auto-rotate=""
-                    camera-controls=""
-                    background-color="#455A64"
-                  ></model-viewer>
-                  <hr />
-                  <div className="card-body" style={{ padding: "0 11px" }}>
-                    <p
-                      className="card-text"
-                      style={{
-                        textAlign: "left",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginBottom: "0rem",
-                      }}
-                    >
-                      <Link to={`/admin/product/${product._id}`}>
-                        <span>{product.name}</span>
-                      </Link>
-                      <span>₹ {product.price}</span>
-                    </p>{" "}
-                    <br />
-                    <p
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <a href="#">
-                        {/* <i className="bi bi-cart"></i> Add to cart */}
-                      </a>
-                      <a
-                        href="#"
-                        onClick={() => handleDeleteProduct(product._id)}
-                        className="deleteItem"
-                      >
-                        <i className="bi bi-trash3"></i> Delete
-                      </a>
-                    </p>
+            {productData.length > 0
+              ? productData.map((product) => (
+                  <div className="col-md-3" style={{ marginBottom: "12px" }}>
+                    <div className="card">
+                      <model-viewer
+                        className="viewer card-img-top"
+                        style={{
+                          height: "250px",
+                          width: "100%",
+                          backgroundColor: "#17171A!important",
+                        }}
+                        src={product.image}
+                        // ios-src={chairUsdz}
+                        ar
+                        alt="A 3D model of a chair"
+                        camera-orbit="-90deg"
+                        auto-rotate=""
+                        camera-controls=""
+                        background-color="#455A64"
+                      ></model-viewer>
+                      <hr />
+                      <div className="card-body" style={{ padding: "0 11px" }}>
+                        <p
+                          className="card-text"
+                          style={{
+                            textAlign: "left",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginBottom: "0rem",
+                          }}
+                        >
+                          <Link to={`/admin/product/${product._id}`}>
+                            <span>{product.name}</span>
+                          </Link>
+                          <span>₹ {product.price}</span>
+                        </p>{" "}
+                        <br />
+                        <p
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <a href="#">
+                            {/* <i className="bi bi-cart"></i> Add to cart */}
+                          </a>
+                          <a
+                            href="#"
+                            onClick={() => handleDeleteProduct(product._id)}
+                            className="deleteItem"
+                          >
+                            <i className="bi bi-trash3"></i> Delete
+                          </a>
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                ))
+              : ""}
           </div>
         </div>
         <AddProduct update={update} setUpdate={setUpdate} />

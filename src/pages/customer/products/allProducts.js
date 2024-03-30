@@ -12,8 +12,8 @@ const AllProducts = () => {
   useEffect(() => {
     const load = toast.loading("loading...");
     axios
-      .get("http://192.168.0.102:8080/products")
-      // .get("http://192.168.0.102:8080/products")
+      .get("http://192.168.0.112:8080/products")
+      // .get("http://192.168.0.112:8080/products")
       .then((res) => {
         setProductList(res.data.data);
         toast.dismiss(load);
@@ -171,108 +171,117 @@ const AllProducts = () => {
           </main>
           <div className="products">
             <div className="row">
-              {productList.map((product) => (
-                <div className="col-md-3" style={{ marginBottom: "12px" }}>
-                  <div className="card">
-                    <model-viewer
-                      className="viewer card-img-top"
-                      style={{
-                        height: "250px",
-                        width: "100%",
-                        backgroundColor: "#17171A!important",
-                      }}
-                      src={product.image}
-                      // ios-src={chairUsdz}
-                      ar
-                      alt="A 3D model of a chair"
-                      camera-orbit="-90deg"
-                      auto-rotate=""
-                      camera-controls=""
-                      background-color="#455A64"
-                    ></model-viewer>
-                    <hr />
-                    <div className="card-body" style={{ padding: "0 11px" }}>
-                      <p
-                        className="card-text"
-                        style={{
-                          textAlign: "left",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          marginBottom: "0rem",
-                        }}
-                      >
-                        <span>
-                          <Link to={`/customer/product/${product._id}`}>
-                            {product.name}
-                          </Link>
-                        </span>
-                        <span>₹ {product.price}</span>
-                      </p>{" "}
-                      <br />
-                      <p
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <p>
-                          {cartObj[product._id] ? (
-                            <>
+              {productList.length > 0
+                ? productList.map((product) => (
+                    <div className="col-md-3" style={{ marginBottom: "12px" }}>
+                      <div className="card">
+                        <model-viewer
+                          className="viewer card-img-top"
+                          style={{
+                            height: "250px",
+                            width: "100%",
+                            backgroundColor: "#17171A!important",
+                          }}
+                          src={product.image}
+                          // ios-src={chairUsdz}
+                          ar
+                          alt="A 3D model of a chair"
+                          camera-orbit="-90deg"
+                          auto-rotate=""
+                          camera-controls=""
+                          background-color="#455A64"
+                        ></model-viewer>
+                        <hr />
+                        <div
+                          className="card-body"
+                          style={{ padding: "0 11px" }}
+                        >
+                          <p
+                            className="card-text"
+                            style={{
+                              textAlign: "left",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "0rem",
+                            }}
+                          >
+                            <span>
+                              <Link to={`/customer/product/${product._id}`}>
+                                {product.name}
+                              </Link>
+                            </span>
+                            <span>₹ {product.price}</span>
+                          </p>{" "}
+                          <br />
+                          <p
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <p>
+                              {cartObj[product._id] ? (
+                                <>
+                                  <a
+                                    href="#"
+                                    onClick={() =>
+                                      handleRemoveFromCart(product._id)
+                                    }
+                                  >
+                                    <i className="bi bi-dash"></i>
+                                  </a>{" "}
+                                  {cartObj[product._id]}{" "}
+                                  <a
+                                    href="#"
+                                    onClick={() =>
+                                      handleAddToCart(
+                                        product._id,
+                                        1 + cartObj[product._id]
+                                      )
+                                    }
+                                  >
+                                    <i className="bi bi-plus"></i>
+                                  </a>
+                                </>
+                              ) : (
+                                <a
+                                  href="#"
+                                  onClick={() =>
+                                    handleAddToCart(product._id, 1)
+                                  }
+                                >
+                                  <i className="bi bi-cart"></i> Add to cart{" "}
+                                </a>
+                              )}
+                            </p>
+                            {wishListProducts.includes(product._id) ? (
                               <a
-                                href="#"
                                 onClick={() =>
-                                  handleRemoveFromCart(product._id)
+                                  handleRemoveFromWhishlist(product._id)
                                 }
+                                title="Remove from wishlist"
                               >
-                                <i className="bi bi-dash"></i>
-                              </a>{" "}
-                              {cartObj[product._id]}{" "}
-                              <a
-                                href="#"
-                                onClick={() =>
-                                  handleAddToCart(
-                                    product._id,
-                                    1 + cartObj[product._id]
-                                  )
-                                }
-                              >
-                                <i className="bi bi-plus"></i>
+                                <i
+                                  className="bi bi-heart-fill"
+                                  style={{ color: "#dc3545" }}
+                                ></i>
                               </a>
-                            </>
-                          ) : (
-                            <a
-                              href="#"
-                              onClick={() => handleAddToCart(product._id, 1)}
-                            >
-                              <i className="bi bi-cart"></i> Add to cart{" "}
-                            </a>
-                          )}
-                        </p>
-                        {wishListProducts.includes(product._id) ? (
-                          <a
-                            onClick={() =>
-                              handleRemoveFromWhishlist(product._id)
-                            }
-                            title="Remove from wishlist"
-                          >
-                            <i
-                              className="bi bi-heart-fill"
-                              style={{ color: "#dc3545" }}
-                            ></i>
-                          </a>
-                        ) : (
-                          <a
-                            onClick={() => handleAddToWhishlist(product._id)}
-                            title="Add to wishlist"
-                          >
-                            <i className="bi bi-heart"></i>
-                          </a>
-                        )}
-                      </p>
+                            ) : (
+                              <a
+                                onClick={() =>
+                                  handleAddToWhishlist(product._id)
+                                }
+                                title="Add to wishlist"
+                              >
+                                <i className="bi bi-heart"></i>
+                              </a>
+                            )}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  ))
+                : ""}
             </div>
           </div>
         </div>

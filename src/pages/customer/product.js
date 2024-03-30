@@ -319,8 +319,8 @@ const Product = () => {
                 // shadow-intensity="1"
                 id="dimension-demo"
                 ar
-                ar-modes="webxr scene-viewer"
-                ar-scale="fixed"
+                ar-modes="scene-viewer"
+                // ar-scale="fixed"
                 camera-orbit="-30deg auto auto"
                 max-camera-orbit="auto 100deg auto"
                 shadow-intensity="1"
