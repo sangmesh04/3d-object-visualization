@@ -17,6 +17,7 @@ import Product from "./pages/customer/product";
 import Orders from "./pages/customer/orders";
 import AdminOrders from "./pages/admin/orders";
 import AdminProduct from "./pages/admin/product";
+import Customizer from "./pages/customer/customizer";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="profile" element={<CustomerProfile />} />
             <Route path="products" element={<AllProducts />} />
             <Route path="product/:productId" element={<Product />} />
+            <Route path="customize/:productId" element={<Customizer />} />
             <Route path="wishlist" element={<Wishlist />} />
             <Route path="cart" element={<Cart />} />
             <Route path="checkout" element={<CheckOut />}></Route>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axiosInstance from "../../axios";
 import "./products/product.css";
 
@@ -320,7 +320,7 @@ const Product = () => {
                 id="dimension-demo"
                 ar
                 ar-modes="scene-viewer"
-                // ar-scale="fixed"
+                ar-scale="fixed"
                 camera-orbit="-30deg auto auto"
                 max-camera-orbit="auto 100deg auto"
                 shadow-intensity="1"
@@ -346,7 +346,7 @@ const Product = () => {
                     right: "16px",
                   }}
                 >
-                  👋 Activate AR
+                  Activate AR 🤳🏻
                 </button>
                 <button
                   slot="hotspot-dot+X-Y+Z"
@@ -511,20 +511,30 @@ const Product = () => {
                   </a>
                 )}
               </p>
-              <div class="form-check form-switch">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  role="switch"
-                  id="flexSwitchCheckChecked"
-                  checked={showDimension}
-                  onChange={(e) => {
-                    setVisibility(!showDimension);
-                  }}
-                />
-                <label class="form-check-label" for="flexSwitchCheckChecked">
-                  Show dimensions
-                </label>
+              <div className="d-flex" style={{ alignItems: "center" }}>
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="flexSwitchCheckChecked"
+                    checked={showDimension}
+                    onChange={(e) => {
+                      setVisibility(!showDimension);
+                    }}
+                  />
+                  <label class="form-check-label" for="flexSwitchCheckChecked">
+                    Show dimensions
+                  </label>
+                </div>
+                <Link
+                  to={`/customer/customize/${product._id}`}
+                  style={{ color: "white" }}
+                >
+                  <button className="btn btn-dark mx-2">
+                    <i class="bi bi-brush"></i> Customize{" "}
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

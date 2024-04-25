@@ -13,8 +13,8 @@ const AllAdminProducts = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      // .get("http://192.168.0.112:8080/products/")
-      .get("http://192.168.0.112:8080/products/")
+      // .get("http://192.168.0.111:8080/products/")
+      .get("http://192.168.0.111:8080/products/")
       .then((res) => {
         setProductData(res.data.data);
         setLoading(false);
