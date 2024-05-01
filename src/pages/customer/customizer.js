@@ -11,7 +11,8 @@ import { colors } from "./texture";
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import axiosInstance from "../../axios";
 
 const Customizer = (props) => {
@@ -29,7 +30,11 @@ const Customizer = (props) => {
   var loaded = false; // Model is loaded or not
   let initRotate = 0; // Rotating the model
   let meshcolor = {}; // Object storing the meshes and colors in it Eg:- {legs:"Blue", cushion:"Black"}
-  let productSize = {};
+  const [productSize, setProductSize] = useState({
+    length: null,
+    breadth: null,
+    height: null,
+  });
 
   const location = useLocation();
 
@@ -185,8 +190,6 @@ const Customizer = (props) => {
       });
 
       console.log("Product Size: ", product.design.size);
-      let s = product.design.size;
-      productSize = s;
 
       const l = Object.keys(product.design).length;
       if (l > 2) {
@@ -232,19 +235,42 @@ const Customizer = (props) => {
     save(new Blob([text], { type: "text/plain" }), filename);
   }
 
-  function save(blob, fileName) {
+  const save = async (blob, fileName) => {
+    const load = toast.loading("loading...");
     console.log("Blob", blob);
     link.href = URL.createObjectURL(blob);
     link.download = fileName;
     console.log(link.href);
-    setARShow(link.href);
 
-    const formData = new FormData();
-    //console.log(file)
-    formData.append("file", blob);
-    formData.append("fileName", fileName);
-    console.log(formData);
-
+    const s3Client = new S3Client({
+      region: "ap-south-1",
+      credentials: {
+        accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY,
+        secretAccessKey: process.env.REACT_APP_AWS_SECRET_KEY,
+      },
+    });
+    const keypath = `customize/${
+      location.state.name + Date.now() + "-" + fileName
+    }`;
+    const params = {
+      Bucket: "3d-object-visualization",
+      Key: keypath,
+      Body: blob,
+    };
+    const command = new PutObjectCommand(params);
+    const data = await s3Client.send(command);
+    // const data = true;
+    if (data) {
+      toast.dismiss(load);
+      setArlink(
+        `https://3d-object-visualization.s3.ap-south-1.amazonaws.com/${keypath}`
+        // "https://3d-object-visualization.s3.ap-south-1.amazonaws.com/customize/Arm+Chair1714543799674-scene.glb"
+      );
+      toast.success("Customized file uploaded!");
+    } else {
+      toast.dismiss(load);
+      toast.error("Unable to upload image!");
+    }
     // axios.post(`${backendUrl}/uploadApproval`, formData)
     // .then(res=>{
     //     console.log(res)
@@ -253,7 +279,7 @@ const Customizer = (props) => {
 
     // })
     setStep(2);
-  }
+  };
 
   // Runs when we change texture or color from predefined colors in pallete
   const changeColor = (color) => {
@@ -350,45 +376,30 @@ const Customizer = (props) => {
   };
 
   //API to make customization request
-  // const addCustomizationRequest = () => {
-  //   //setCustomization({...customization, image: arlink})
-  //   let cc = customization;
-  //   cc['image'] = arlink
-  //   console.log("Customization", cc)
+  const addCustomizationRequest = () => {
+    //setCustomization({...customization, image: arlink})
 
-  //   const request = {
-  //       user:user,
-  //       product: product,
-  //       customization: cc
-  //   }
+    const request = {
+      productId: location.state._id,
+      image: arlink,
+      customization,
+    };
 
-  //   axios.post(`${backendUrl}/addCustomizationRequest/`, request)
-  //   .then(res=>{
-  //       console.log(res.data)
-  //       alert(res.data.message)
-  //       props.history.push('/approvals')
-  //   })
-  //   .catch(err=>{
-  //       alert("Something went wrong")
-  //   })
-  // }
-
-  const extraCustomization = () => {
-    setCustomization({ ...customization, size: productSize });
-    if (extras) setStep(3);
-    else setStep(4);
+    axiosInstance
+      .post(`/customize/add`, { ...request })
+      .then((res) => {
+        toast.success("Customization request sent successfully!");
+      })
+      .catch((err) => {
+        toast.error("Something went wrong");
+      });
   };
 
-  const changeSize = (p, value) => {
-    productSize[p] = value;
-  };
-
-  const changeExtras = (index, n) => {
-    let e = extras;
-    e[index].qty = e[index].qty + n;
-    getExtras(e);
-    setCustomization({ ...customization, extras: e });
-    console.log("New Extras", extras);
+  const extraCustomization = (cmd) => {
+    if (cmd === "add") {
+      setCustomization({ ...customization, size: { ...productSize } });
+    }
+    setStep(4);
   };
 
   return (
@@ -460,20 +471,22 @@ const Customizer = (props) => {
               </div>
             </div>
 
-            <model-viewer
-              style={{
-                height: "500px",
-                width: "100%",
-                backgroundColor: "#17171A!important",
-              }}
-              src={arShow}
-              ar
-              alt="A 3D model of a furniture"
-              camera-orbit="-90deg"
-              auto-rotate=""
-              camera-controls=""
-              background-color="#455A64"
-            ></model-viewer>
+            <div className="my-3">
+              <model-viewer
+                style={{
+                  height: "500px",
+                  width: "100%",
+                  backgroundColor: "#17171A!important",
+                }}
+                src={arlink}
+                ar
+                alt="A 3D model of a furniture"
+                camera-orbit="-90deg"
+                auto-rotate=""
+                camera-controls=""
+                background-color="#455A64"
+              ></model-viewer>
+            </div>
           </div>
         ) : (
           <p>Loading Model...</p>
@@ -537,6 +550,7 @@ const Customizer = (props) => {
 
       {step === 2 ? (
         <div className="m-50 text-center">
+          <br />
           <div style={{ fontSize: "16px" }}>
             Product Original Dimensions (in inches): {product.length} x{" "}
             {product.breadth} x {product.height}
@@ -546,91 +560,48 @@ const Customizer = (props) => {
           <div style={{ fontSize: "24px", marginBottom: "10px" }}>
             Customize product size
           </div>
-          <div className="p-1 text-center">
+          <div
+            className="p-1 text-center"
+            style={{ width: "300px", margin: "12px auto" }}
+          >
             <h6>Enter your Dimensions (in inches)</h6>
             <input
-              className="input-lg1-text"
+              className="input-lg1-text form-control"
               type="text"
               onChange={(event) => {
-                changeSize("length", event.target.value);
+                setProductSize({ ...productSize, length: event.target.value });
               }}
               placeholder="Length"
             />
             <br />
             <input
-              className="input-lg1-text"
+              className="input-lg1-text form-control"
               type="text"
               onChange={(event) => {
-                changeSize("breadth", event.target.value);
+                setProductSize({ ...productSize, breadth: event.target.value });
               }}
               placeholder="Breadth"
             />
             <br />
             <input
-              className="input-lg1-text"
+              className="input-lg1-text form-control"
               type="text"
               onChange={(event) => {
-                changeSize("height", event.target.value);
+                setProductSize({ ...productSize, height: event.target.value });
               }}
               placeholder="Height"
             />
             <br />
           </div>
-
-          <button className="btn btn-proceed m-2" onClick={extraCustomization}>
-            Proceed
-          </button>
-        </div>
-      ) : null}
-
-      {step === 3 ? (
-        <div className="m-50 text-center" style={{ minHeight: "53.6vh" }}>
-          <div style={{ fontSize: "24px", padding: "1rem" }}>
-            Extra Customization
-          </div>
-          {extras && extras.length !== 0
-            ? extras.map((feature, index) => (
-                <div className="p-2">
-                  {index + 1}. &nbsp;
-                  {feature.name}
-                  <div class="btn-group ml-3">
-                    <button
-                      type="button"
-                      class="btn btn-outline-secondary"
-                      style={{ marginRight: "0px" }}
-                      disabled={feature.qty === 0}
-                      onClick={() => {
-                        changeExtras(index, -1);
-                      }}
-                    >
-                      -
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      style={{ marginRight: "0px" }}
-                    >
-                      {feature.qty}
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-outline-secondary"
-                      disabled={feature.qty === 10}
-                      onClick={() => {
-                        changeExtras(index, 1);
-                      }}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              ))
-            : null}
           <button
             className="btn btn-proceed m-2"
-            onClick={() => {
-              setStep(4);
-            }}
+            onClick={() => extraCustomization("skip")}
+          >
+            Skip
+          </button>
+          <button
+            className="btn btn-info m-2"
+            onClick={() => extraCustomization("add")}
           >
             Proceed
           </button>
