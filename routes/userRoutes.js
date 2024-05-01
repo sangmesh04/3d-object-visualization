@@ -3,6 +3,7 @@ const userController = require("../controllers/userController");
 const wishlistController = require("../controllers/wishlistController");
 const cartController = require("../controllers/cartController");
 const orderController = require("../controllers/orderController");
+const customizeController = require("../controllers/customizeController");
 const authUser = require("../middleware/authUser");
 const authAdmin = require("../middleware/authAdmin");
 const router = express.Router();
@@ -49,5 +50,7 @@ router.get("/cart/detail", authUser, cartController.GetCartDetails);
 router.post("/user/order/place", authUser, orderController.placeOrder);
 
 router.get("/user/orders", authUser, orderController.getOrders);
+
+router.post("/customize/add", authUser, customizeController.AddCustomize);
 
 module.exports = router;
