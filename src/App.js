@@ -34,7 +34,7 @@ function App() {
             <Route path="profile" element={<CustomerProfile />} />
             <Route path="products" element={<AllProducts />} />
             <Route path="product/:productId" element={<Product />} />
-            <Route path="customize/:productId" element={<Customizer />} />
+            <Route path="customize" element={<Customizer />} />
             <Route path="wishlist" element={<Wishlist />} />
             <Route path="cart" element={<Cart />} />
             <Route path="checkout" element={<CheckOut />}></Route>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../axios";
 import "./products/product.css";
 
@@ -282,6 +282,11 @@ const Product = () => {
       modelViewer.addEventListener("camera-change", renderSVG);
     });
 
+  const navigate = useNavigate();
+  const navigateToCustomizer = (product) => {
+    navigate("/customer/customize", { state: product });
+  };
+
   return (
     <>
       <div className="hero">
@@ -527,14 +532,17 @@ const Product = () => {
                     Show dimensions
                   </label>
                 </div>
-                <Link
+                {/* <Link
                   to={`/customer/customize/${product._id}`}
                   style={{ color: "white" }}
+                > */}
+                <button
+                  className="btn btn-dark mx-2"
+                  onClick={() => navigateToCustomizer(product)}
                 >
-                  <button className="btn btn-dark mx-2">
-                    <i class="bi bi-brush"></i> Customize{" "}
-                  </button>
-                </Link>
+                  <i class="bi bi-brush"></i> Customize{" "}
+                </button>
+                {/* </Link> */}
               </div>
             </div>
           </div>

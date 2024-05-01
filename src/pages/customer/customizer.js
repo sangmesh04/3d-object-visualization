@@ -2,8 +2,8 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-// import {GLTFExporter} from "three/examples/jsm/exporters/GLTFExporter"
-import GLTFExporter from "three-gltf-exporter";
+import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
+// import GLTFExporter from "three-gltf-exporter";
 
 import React from "react";
 
@@ -11,10 +11,10 @@ import { colors } from "./texture";
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { useLocation, useParams } from "react-router-dom";
 import axiosInstance from "../../axios";
-import { useParams } from "react-router-dom";
 
-const Customizer = () => {
+const Customizer = (props) => {
   document.title = "Product Customizer";
 
   //Initialze Camera for viewing 3D Model
@@ -31,13 +31,14 @@ const Customizer = () => {
   let meshcolor = {}; // Object storing the meshes and colors in it Eg:- {legs:"Blue", cushion:"Black"}
   let productSize = {};
 
+  const location = useLocation();
+
   const [customization, setCustomization] = useState(); // State variable to store meshcolor
   const [model, setModel] = useState(); // State variable to store 3d Model
   const [arlink, setArlink] = useState(); // Stores link of AR File that is generated after clicking 'Proceed'
   const [arShow, setARShow] = useState();
   const [product, setProduct] = useState({
-    arFile:
-      "https://3d-object-visualization.s3.ap-south-1.amazonaws.com/products/Arm Chair1712057004724-arm_chair__furniture.glb",
+    arFile: location.state.image,
     length: 200,
     breadth: 500,
     height: 300,
@@ -77,62 +78,44 @@ const Customizer = () => {
 
   var loader = new GLTFLoader();
 
-  // API to get Product details
-
-  const params = useParams();
-
-  // useEffect(() => {
-  //   const load = toast.loading("loading...");
-  //   axiosInstance
-  //     .get(`/product/${params.productId}`)
-  //     .then((res) => {
-  //       // setProduct(res.data.data);
-  //       toast.dismiss(load);
-  //     })
-  //     .catch((err) => {
-  //       toast.dismiss(load);
-  //       toast.error("Something went wrong!");
-  //     });
-  // }, []);
-
   // Function to Load Model
   useEffect(() => {
-    // if (product !== undefined && !loaded) {
-    loader.load(
-      product.arFile,
-      function (gltf) {
-        console.log("Loader", scene);
-        var theModel = gltf.scene;
-        theModel.traverse((o) => {
-          //Going through each Mesh
-          if (o.isMesh) {
-            m.push(o.name); // Put name of Mesh in Array of Buttons
-            o.nameID = o.name;
-            o.castShadow = true;
-            o.receiveShadow = true;
-            // if (o.name in product.design.color) {
-            //   o.material = setColor(product.design.color[o.name]);
-            // }
-            //o.material = material; // Assigning initial Material
-          }
-        });
-        theModel.scale.set(1, 1, 1);
-        theModel.rotation.y = Math.PI;
-        theModel.position.y = 0;
-        scene.add(theModel); // Adding model to the scene
-        setModel(theModel);
-        setMeshes(m);
-        setScene(scene);
-      },
-      undefined,
-      function (error) {
-        console.error(error);
-      }
-    );
+    if (product !== undefined && !loaded) {
+      loader.load(
+        product.arFile,
+        function (gltf) {
+          console.log("Loader", scene);
+          var theModel = gltf.scene;
+          theModel.traverse((o) => {
+            //Going through each Mesh
+            if (o.isMesh) {
+              m.push(o.name); // Put name of Mesh in Array of Buttons
+              o.nameID = o.name;
+              o.castShadow = true;
+              o.receiveShadow = true;
+              //   if (o.name in product.design.color) {
+              //     o.material = setColor(product.design.color[o.name]);
+              //   }
+              //o.material = material; // Assigning initial Material
+            }
+          });
+          theModel.scale.set(1, 1, 1);
+          theModel.rotation.y = Math.PI;
+          theModel.position.y = 0;
+          scene.add(theModel); // Adding model to the scene
+          setModel(theModel);
+          setMeshes(m);
+          setScene(scene);
+        },
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
 
-    animate(); // For assigning controls and rotations of model
-    // }
-  }, []);
+      animate(); // For assigning controls and rotations of model
+    }
+  }, [product]);
 
   var controls = new OrbitControls(camera, renderer.domElement);
   controls.maxPolarAngle = Math.PI / 2;
@@ -140,7 +123,7 @@ const Customizer = () => {
   controls.enableDamping = true;
   controls.enablePan = false;
   controls.dampingFactor = 0.1;
-  controls.autoRotate = true; // Toggle this if you'd like the chair to automatically rotate
+  controls.autoRotate = false; // Toggle this if you'd like the chair to automatically rotate
   controls.autoRotateSpeed = 0.2;
 
   function animate() {
@@ -222,8 +205,8 @@ const Customizer = () => {
     exporter.parse(
       initScene,
       function (result) {
-        console.log(result);
-        if (result instanceof ArrayBuffer) {
+        console.log("result", result);
+        if (result && result instanceof ArrayBuffer) {
           saveArrayBuffer(result, "scene.glb");
         } else {
           const output = JSON.stringify(result, null, 2);
@@ -345,7 +328,7 @@ const Customizer = () => {
   // All this document.getElementById is for changing CSS of buttons
 
   // Runs when we change color from custom input
-  const ChangeColors = (color) => {
+  const cColor = (color) => {
     if (!part) {
       toast.error("Select a mesh part!");
     } else {
@@ -366,7 +349,7 @@ const Customizer = () => {
     }
   };
 
-  // //API to make customization request
+  //API to make customization request
   // const addCustomizationRequest = () => {
   //   //setCustomization({...customization, image: arlink})
   //   let cc = customization;
@@ -408,12 +391,10 @@ const Customizer = () => {
     console.log("New Extras", extras);
   };
 
-  if (!model) {
-    return <div className="loading-model my-">Retrieving model...</div>;
-  }
-
   return (
     <div className="customization-page">
+      {!model ? <div className="loading-model">Retrieving Model...</div> : null}
+
       <div className="step-box text-center">
         <div
           className={
@@ -455,13 +436,13 @@ const Customizer = () => {
         </div>
       </div>
 
-      {step === 1 ? (
-        <>
+      {step === 4 ? (
+        arlink ? (
           <div className="p-2">
             <div className="row">
               <div className="col-6 text-left">
                 <button
-                  className="btn btn-warning"
+                  className="btn btn-primary"
                   onClick={() => {
                     window.location.reload();
                   }}
@@ -472,87 +453,87 @@ const Customizer = () => {
               <div className="col-6 text-right">
                 <button
                   className="btn btn-dark align-right"
-                  //   onClick={addCustomizationRequest}
+                  onClick={addCustomizationRequest}
                 >
                   Ask for Approval
                 </button>
               </div>
             </div>
 
-            {/* <model-viewer
-          style={{
-            height: "30rem",
-            width: "100%",
-            backgroundColor: "#17171A!important",
-          }}
-          src={product.arFile}
-          ar
-          alt="A 3D model of a furniture"
-          camera-orbit="-90deg"
-          auto-rotate=""
-          camera-controls=""
-          background-color="#455A64"
-        ></model-viewer> */}
-            <div id="obj" style={{ marginTop: "35px" }}></div>
-            <div style={{ textAlign: "center", padding: "1rem" }}>
-              <div id="selected-part"></div>
-              {meshes && meshes.length != 0
-                ? meshes.map((mesh, i) => (
-                    <button
-                      className="btn m-1"
-                      style={{ backgroundColor: "#b3b3b3" }}
-                      id={`${mesh}`}
-                      key={mesh}
-                      onClick={() => {
-                        setPart(mesh);
-                      }}
-                    >
-                      {`Mesh part ` + (i + 1)}
-                    </button>
-                  ))
-                : null}
-              <br />
-            </div>
+            <model-viewer
+              style={{
+                height: "500px",
+                width: "100%",
+                backgroundColor: "#17171A!important",
+              }}
+              src={arShow}
+              ar
+              alt="A 3D model of a furniture"
+              camera-orbit="-90deg"
+              auto-rotate=""
+              camera-controls=""
+              background-color="#455A64"
+            ></model-viewer>
+          </div>
+        ) : (
+          <p>Loading Model...</p>
+        )
+      ) : null}
+
+      {step === 1 ? (
+        <div className="p-2 text-center">
+          <div id="obj" style={{ height: "50vh" }}></div>
+          <div className="row mx-3 color-pallete justify-content-md-center">
+            {colors && colors.length !== 0
+              ? colors.map((color, index) => (
+                  <div
+                    key={index}
+                    className="choose-color"
+                    style={
+                      color.texture
+                        ? { backgroundImage: `url(${color.texture})` }
+                        : { backgroundColor: `#${color.color}` }
+                    }
+                    onClick={() => changeColor(color)}
+                  />
+                ))
+              : null}
+            <br />
+          </div>
+          <div className="mx-3">
+            Select Custom Color from this input:{" "}
+            <input
+              type="color"
+              className="choose-input-color"
+              onChange={(e) => {
+                cColor(e.target.value);
+              }}
+            />
           </div>
 
-          <div className="p-2 text-center">
-            <div className="row mx-3 color-pallete justify-content-md-center">
-              {colors && colors.length !== 0
-                ? colors.map((color, index) => (
-                    <div
-                      key={index}
-                      className="choose-color"
-                      style={
-                        color.texture
-                          ? { backgroundImage: `url(${color.texture})` }
-                          : { backgroundColor: `#${color.color}` }
-                      }
-                      onClick={() => changeColor(color)}
-                    />
-                  ))
-                : null}
-            </div>
-            <div className="mx-3">
-              Select Custom Color from this input:{" "}
-              <input
-                type="color"
-                className="choose-input-color"
-                onChange={(e) => {
-                  ChangeColors(e.target.value);
-                }}
-              />
-            </div>
-
-            <div style={{ textAlign: "center", padding: "1rem" }}>
-              <button className="btn btn-primary m-2" onClick={download}>
-                Proceed
-              </button>
-            </div>
+          <div style={{ textAlign: "center", padding: "1rem" }}>
+            <div id="selected-part"></div>
+            {meshes && meshes.length != 0
+              ? meshes.map((mesh, index) => (
+                  <button
+                    className="btn m-1"
+                    style={{ backgroundColor: "#b3b3b3" }}
+                    id={`${mesh}`}
+                    onClick={() => {
+                      setPart(mesh);
+                    }}
+                  >
+                    {"Mesh part " + (index + 1)}
+                  </button>
+                ))
+              : null}
+            <br />
+            <button className="btn btn-info m-2" onClick={download}>
+              Proceed
+            </button>
           </div>
-        </>
-      ) : (
-        ""
-      )}
+        </div>
+      ) : null}
 
       {step === 2 ? (
         <div className="m-50 text-center">
@@ -596,13 +577,65 @@ const Customizer = () => {
             <br />
           </div>
 
-          <button className="btn btn-primary m-2" onClick={extraCustomization}>
+          <button className="btn btn-proceed m-2" onClick={extraCustomization}>
             Proceed
           </button>
         </div>
-      ) : (
-        ""
-      )}
+      ) : null}
+
+      {step === 3 ? (
+        <div className="m-50 text-center" style={{ minHeight: "53.6vh" }}>
+          <div style={{ fontSize: "24px", padding: "1rem" }}>
+            Extra Customization
+          </div>
+          {extras && extras.length !== 0
+            ? extras.map((feature, index) => (
+                <div className="p-2">
+                  {index + 1}. &nbsp;
+                  {feature.name}
+                  <div class="btn-group ml-3">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary"
+                      style={{ marginRight: "0px" }}
+                      disabled={feature.qty === 0}
+                      onClick={() => {
+                        changeExtras(index, -1);
+                      }}
+                    >
+                      -
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      style={{ marginRight: "0px" }}
+                    >
+                      {feature.qty}
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary"
+                      disabled={feature.qty === 10}
+                      onClick={() => {
+                        changeExtras(index, 1);
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              ))
+            : null}
+          <button
+            className="btn btn-proceed m-2"
+            onClick={() => {
+              setStep(4);
+            }}
+          >
+            Proceed
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 };
